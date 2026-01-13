@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+.bg-empower {
+  background: linear-gradient(
+    120deg,
+    #ede9fe,
+    #f3e8ff,
+    #e9d5ff,
+    #fce7f3
+  );
+  background-size: 300% 300%;
+}
+
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradientShift 20s ease-in-out infinite;
+}
