@@ -47,7 +47,7 @@ export default function Home() {
       </section>
 
       {/* Scroll Section */}
-      <ThreeWays />
+      <ThreeWays1 />
     </>
   );
 }
