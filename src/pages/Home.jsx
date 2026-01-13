@@ -1,5 +1,5 @@
 import { ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
-import ThreeWays from "../components/ThreeWays";
+import ThreeWays1 from "../components/ThreeWays1";
 
 export default function Home() {
   return (

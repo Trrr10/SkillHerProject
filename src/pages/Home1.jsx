@@ -1,7 +1,8 @@
 import { ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import ThreeWays1 from "../components/ThreeWays1";
-
+import DynamicDash from "../components/DynamicDash";
+import Testimonials from "../components/Testimonials";
 function FloatingOrbs() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -187,6 +188,9 @@ with safety, dignity, and control.
       </section>
 
       <ThreeWays1 />
+       <DynamicDash />
+
+      <Testimonials />
 
       <style jsx>{`
         @keyframes float {
