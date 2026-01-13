@@ -1,12 +1,17 @@
 import { X, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-export default function LoginModal({ onClose, onSignup }) {
+export default function LoginModal({ onClose, onSignup,onSuccess }) {
    const [name, setName] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = () => {
-  
+  if (!name) return;
+
+  const userData = { name };
+  localStorage.setItem("user", JSON.stringify(userData));
+
+  onSuccess(userData); 
 
     onClose();                
     navigate("/dashboard");    
@@ -32,7 +37,13 @@ export default function LoginModal({ onClose, onSignup }) {
         <h2 className="text-2xl font-semibold mb-5 text-center">
           Welcome Back ✨
         </h2>
-
+<input
+  type="text"
+  placeholder="Your name"
+  value={name}
+  onChange={(e) => setName(e.target.value)}
+  className="w-full border px-4 py-3 rounded-xl mb-3 focus:ring-2 focus:ring-purple-400 outline-none"
+/>
         <input
           type="email"
           placeholder="Email"

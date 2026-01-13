@@ -189,7 +189,7 @@ with safety, dignity, and control.
       </section>
 
       <ThreeWays1 />
- 1f9300a (Added login/signup flow and navbar user state)
+  <DynamicDash />
 
       <Testimonials />
 

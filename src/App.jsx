@@ -56,7 +56,7 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-
+<Footer/>
     </div>
   );
 }

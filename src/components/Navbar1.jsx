@@ -29,12 +29,45 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
           </div>
         </Link>
 
-        {/* Nav Links */}
-        <div className="flex gap-8 items-center">
-          <Link className="nav-link" to="/">Home</Link>
-          <Link className="nav-link" to="/about">About</Link>
-          <Link className="nav-link" to="/contact">Contact</Link>
+   {/* Navigation Links - Enhanced */}
+        <div className="flex gap-10 items-center">
+          <Link 
+            to="/" 
+            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
+          >
+            Home
+            {/* Animated dot indicator */}
+            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
+            {/* Underline effect */}
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+          </Link>
+          
+          <Link 
+            to="/about" 
+            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
+          >
+            About
+            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
 
+ </Link>
+           <Link 
+            to="/about" 
+            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
+          >
+            Learnings
+            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+          </Link>
+          
+          <Link 
+            to="/contact" 
+            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
+          >
+            Contact
+            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+          </Link>
           {/* 🔐 AUTH SECTION */}
           {!user ? (
             <>
