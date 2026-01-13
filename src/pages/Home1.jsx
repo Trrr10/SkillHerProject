@@ -1,6 +1,7 @@
 import { ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import ThreeWays1 from "../components/ThreeWays1";
+
 import DynamicDash from "../components/DynamicDash";
 import Testimonials from "../components/Testimonials";
 function FloatingOrbs() {
@@ -188,7 +189,7 @@ with safety, dignity, and control.
       </section>
 
       <ThreeWays1 />
-       <DynamicDash />
+ 1f9300a (Added login/signup flow and navbar user state)
 
       <Testimonials />
 
