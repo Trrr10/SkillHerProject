@@ -26,42 +26,131 @@ const ContactUs = () => {
       {/* --- ENHANCED DYNAMIC BACKGROUND --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Pulsing Gradient Orbs */}
-        <motion.div 
+        <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 10, repeat: Infinity }}
           className="absolute -top-20 -left-20 w-[500px] h-[500px] bg-white rounded-full blur-[120px]"
         />
-        
+
+        <motion.div
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.1, 0.3] }}
+          transition={{ duration: 15, repeat: Infinity, delay: 2 }}
+          className="absolute top-1/2 -right-32 w-[400px] h-[400px] bg-gradient-to-r from-pink-200 to-purple-200 rounded-full blur-[100px]"
+        />
+
+        <motion.div
+          animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.3, 0.1] }}
+          transition={{ duration: 12, repeat: Infinity, delay: 4 }}
+          className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] bg-gradient-to-r from-orange-200 to-yellow-200 rounded-full blur-[80px]"
+        />
+
+        {/* Floating Geometric Shapes */}
+        <motion.div
+          animate={{
+            x: [0, 100, -50, 0],
+            y: [0, -80, 60, 0],
+            rotate: [0, 180, 360]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[15%] left-[20%] w-16 h-16 bg-white/10 rounded-lg backdrop-blur-sm"
+        />
+
+        <motion.div
+          animate={{
+            x: [0, -80, 40, 0],
+            y: [0, 100, -30, 0],
+            rotate: [0, -180, -360]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[20%] right-[25%] w-12 h-12 bg-white/5 rounded-full backdrop-blur-sm"
+        />
+
+        <motion.div
+          animate={{
+            x: [0, 60, -80, 0],
+            y: [0, -40, 80, 0],
+            rotate: [0, 90, 270, 360]
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[40%] right-[10%] w-8 h-8 bg-white/8 rotate-45 backdrop-blur-sm"
+        />
+
+        {/* Particle System */}
+        <div className="absolute inset-0">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                x: [Math.random() * window.innerWidth, Math.random() * window.innerWidth],
+                y: [Math.random() * window.innerHeight, Math.random() * window.innerHeight],
+                opacity: [0, 0.6, 0]
+              }}
+              transition={{
+                duration: Math.random() * 10 + 10,
+                repeat: Infinity,
+                delay: Math.random() * 5
+              }}
+              className="absolute w-1 h-1 bg-white/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`
+              }}
+            />
+          ))}
+        </div>
+
         {/* Floating Constellation Nodes (Animated Network) */}
         <svg className="absolute inset-0 w-full h-full opacity-20">
-          <motion.circle 
-            animate={{ cx: [100, 150, 100], cy: [200, 250, 200] }} 
+          <motion.circle
+            animate={{ cx: [100, 150, 100], cy: [200, 250, 200] }}
             transition={{ duration: 20, repeat: Infinity }}
-            r="2" fill="white" 
+            r="2" fill="white"
           />
-          <motion.circle 
-            animate={{ cx: [800, 750, 800], cy: [400, 450, 400] }} 
+          <motion.circle
+            animate={{ cx: [800, 750, 800], cy: [400, 450, 400] }}
             transition={{ duration: 15, repeat: Infinity }}
-            r="2" fill="white" 
+            r="2" fill="white"
           />
-          <line x1="0" y1="0" x2="100%" y2="100%" stroke="white" strokeWidth="0.5" strokeDasharray="5,5" />
+          <motion.circle
+            animate={{ cx: [300, 350, 300], cy: [600, 650, 600] }}
+            transition={{ duration: 18, repeat: Infinity, delay: 3 }}
+            r="1.5" fill="white"
+          />
+          <motion.line
+            animate={{ pathLength: [0, 1, 0] }}
+            transition={{ duration: 8, repeat: Infinity }}
+            x1="100" y1="200" x2="800" y2="400" stroke="white" strokeWidth="0.5" strokeDasharray="5,5"
+          />
+          <motion.line
+            animate={{ pathLength: [0, 1, 0] }}
+            transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+            x1="300" y1="600" x2="150" y2="250" stroke="white" strokeWidth="0.3" strokeDasharray="3,3"
+          />
         </svg>
 
         {/* Floating Icons with Parallax Effect */}
-        <motion.div 
-          animate={{ y: [-20, 20, -20], rotate: 360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        <motion.div
+          animate={{ y: [-20, 20, -20], rotate: [0, 10, -10, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[20%] right-[15%] text-white/10"
         >
           <Target size={180} />
         </motion.div>
-        
-        <motion.div 
-          animate={{ x: [-30, 30, -30], y: [0, 50, 0] }}
+
+        <motion.div
+          animate={{ x: [-30, 30, -30], y: [0, 50, 0], rotate: [0, -5, 5, 0] }}
           transition={{ duration: 12, repeat: Infinity }}
           className="absolute bottom-[10%] left-[10%] text-white/10"
         >
           <Heart size={100} fill="currentColor" />
+        </motion.div>
+
+        <motion.div
+          animate={{ y: [0, -30, 0], rotate: [0, 360] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[60%] left-[5%] text-white/8"
+        >
+          <Star size={60} fill="currentColor" />
         </motion.div>
       </div>
 
@@ -123,18 +212,72 @@ const ContactUs = () => {
             </div>
 
             {/* RIGHT SIDE: FORM */}
-            <motion.div className="bg-white rounded-[3rem] p-10 md:p-14 shadow-2xl shadow-purple-900/30">
-              <h2 className="text-4xl font-black text-slate-900 mb-8">Send a Message</h2>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="bg-white rounded-[3rem] p-10 md:p-14 shadow-2xl shadow-purple-900/30"
+            >
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="text-4xl font-black text-slate-900 mb-8"
+              >
+                Send a Message
+              </motion.h2>
               <form className="space-y-5">
-                <input type="text" placeholder="Your Name" className="w-full rounded-2xl px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-purple-400 focus:bg-white outline-none transition-all" />
-                <input type="email" placeholder="Your Email" className="w-full rounded-2xl px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-purple-400 focus:bg-white outline-none transition-all" />
-                <textarea rows="5" placeholder="Tell us how we can help..." className="w-full rounded-2xl px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-purple-400 focus:bg-white outline-none resize-none transition-all" />
-                <motion.button 
-                  whileHover={{ scale: 1.02 }} 
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-5 rounded-2xl bg-gradient-to-r from-orange-400 to-pink-600 text-white font-black text-xl shadow-xl shadow-orange-500/30 flex items-center justify-center gap-3"
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                  <Send size={20} /> Send Message
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    className="w-full rounded-2xl px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-purple-400 focus:bg-white focus:shadow-lg focus:shadow-purple-100 outline-none transition-all duration-300 hover:bg-slate-100"
+                  />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.7 }}
+                >
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    className="w-full rounded-2xl px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-purple-400 focus:bg-white focus:shadow-lg focus:shadow-purple-100 outline-none transition-all duration-300 hover:bg-slate-100"
+                  />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                >
+                  <textarea
+                    rows="5"
+                    placeholder="Tell us how we can help..."
+                    className="w-full rounded-2xl px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-purple-400 focus:bg-white focus:shadow-lg focus:shadow-purple-100 outline-none resize-none transition-all duration-300 hover:bg-slate-100"
+                  />
+                </motion.div>
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                  whileHover={{
+                    scale: 1.02,
+                    boxShadow: "0 20px 40px rgba(251, 146, 60, 0.3)"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-5 rounded-2xl bg-gradient-to-r from-orange-400 to-pink-600 text-white font-black text-xl shadow-xl shadow-orange-500/30 flex items-center justify-center gap-3 hover:shadow-2xl transition-all duration-300"
+                >
+                  <motion.div
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Send size={20} />
+                  </motion.div>
+                  Send Message
                 </motion.button>
               </form>
             </motion.div>

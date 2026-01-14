@@ -124,7 +124,7 @@ function GlowPulse() {
   );
 }
 
-export default function Home1() {
+export default function Home1({ user, onLogin }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -188,7 +188,7 @@ with safety, dignity, and control.
         </div>
       </section>
 
-      <ThreeWays1 />
+      <ThreeWays1 user={user} onLogin={onLogin} />
   <DynamicDash />
 
       <Testimonials />

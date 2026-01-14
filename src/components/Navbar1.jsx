@@ -52,7 +52,7 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
 
  </Link>
            <Link 
-            to="/about" 
+            to="/learnings" 
             className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
           >
             Learnings

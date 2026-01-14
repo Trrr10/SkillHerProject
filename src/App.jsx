@@ -51,7 +51,7 @@ export default function App() {
       )}
 
       <Routes>
-        <Route path="/" element={<Home1 />} />
+        <Route path="/" element={<Home1 user={user} onLogin={() => setShowLogin(true)} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/dashboard" element={<Dashboard />} />

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ShieldCheck, Zap, Award, Plus, Circle } from "lucide-react";
+import { ShieldCheck, Zap, Award, Plus, Circle, Code, Palette, Briefcase, Users, Star } from "lucide-react";
 import { Heart, Shield, Target, TrendingUp } from "lucide-react";
 
 const fadeInUp = {
@@ -204,30 +204,34 @@ export default function AboutUs() {
     </motion.div>
   ))}
 </div>
-{/* --- LAYER 3: FLOATING MEANINGFUL ICONS --- */}
+
+{/* --- LAYER 4: FLOATING CONTEXT-RELATED SYMBOLS --- */}
 <div className="fixed inset-0 z-[5] pointer-events-none">
   {[
-    { Icon: Heart, color: "text-pink-400", left: "10%", top: "20%" },
-    { Icon: Shield, color: "text-purple-400", left: "80%", top: "30%" },
-    { Icon: Target, color: "text-indigo-400", left: "60%", top: "70%" },
-    { Icon: TrendingUp, color: "text-green-400", left: "25%", top: "75%" },
+    { Icon: Code, color: "text-blue-300", left: "15%", top: "40%" },
+    { Icon: Palette, color: "text-purple-300", left: "70%", top: "50%" },
+    { Icon: Briefcase, color: "text-green-300", left: "45%", top: "80%" },
+    { Icon: Users, color: "text-orange-300", left: "85%", top: "60%" },
+    { Icon: Star, color: "text-yellow-300", left: "5%", top: "65%" },
   ].map((item, i) => (
     <motion.div
       key={i}
       className={`absolute ${item.color}`}
       style={{ left: item.left, top: item.top }}
       animate={{
-        y: [0, -30, 0],
-        rotate: [0, 15, -15, 0],
-        opacity: [0.3, 0.6, 0.3],
+        y: [0, -25, 0],
+        rotate: [0, 20, -20, 0],
+        opacity: [0.2, 0.5, 0.2],
+        scale: [1, 1.1, 1],
       }}
       transition={{
-        duration: 10 + i * 2,
+        duration: 12 + i * 3,
         repeat: Infinity,
         ease: "easeInOut",
+        delay: i * 0.5,
       }}
     >
-      <item.Icon size={72} strokeWidth={1.4} />
+      <item.Icon size={48} strokeWidth={1.5} />
     </motion.div>
   ))}
 </div>

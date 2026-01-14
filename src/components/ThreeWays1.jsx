@@ -1,7 +1,17 @@
 import React from "react";
 import { FileText, ShoppingBag, Briefcase, ArrowRight, Sparkles, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const ThreeWays1 = () => {
+const ThreeWays1 = ({ user, onLogin }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = (type) => {
+    if (!user) {
+      onLogin();
+    } else {
+      navigate(`/dashboard?type=${type}`);
+    }
+  };
   return (
     <section className="relative w-full py-16 md:py-4 overflow-hidden bg-gradient-to-b from-white via-purple-50/20 to-white">
       
@@ -59,8 +69,8 @@ const ThreeWays1 = () => {
               </p>
 
               {/* Button */}
-              <button className="w-full py-3.5 rounded-full bg-purple-600 text-white font-bold hover:bg-purple-700 transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-xl hover:scale-[1.02]">
-                Create Profile 
+              <button onClick={() => handleCardClick('skills')} className="w-full py-3.5 rounded-full bg-purple-600 text-white font-bold hover:bg-purple-700 transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-xl hover:scale-[1.02]">
+                Create Profile
                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -133,8 +143,8 @@ const ThreeWays1 = () => {
               </p>
 
               {/* Button */}
-              <button className="w-full py-3.5 rounded-full bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-xl hover:scale-[1.02]">
-                Browse Jobs 
+              <button onClick={() => handleCardClick('jobs')} className="w-full py-3.5 rounded-full bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-xl hover:scale-[1.02]">
+                Browse Jobs
                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
