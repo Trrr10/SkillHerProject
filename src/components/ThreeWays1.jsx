@@ -42,14 +42,14 @@ const ThreeWays1 = ({ onLogin }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
 
           {/* Card 1 - Show Your Skills */}
-          <div className="group relative rounded-3xl p-8 bg-white/80 backdrop-blur-sm text-left transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-lg border-2 border-purple-200/50 hover:border-purple-300">
+          <div className="group relative rounded-3xl p-8 bg-white/80 backdrop-blur-sm text-left transition-transform duration-300 hover:-translate-y-2 shadow-lg border-2 border-purple-200/50 hover:border-purple-300 hover:shadow-2xl">
             
             {/* Shimmer effect only */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"></div>
 
             <div className="relative z-10">
               {/* Icon */}
-              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-purple-100 mb-6 group-hover:bg-purple-200 group-hover:scale-105 transition-all duration-300 shadow-md group-hover:shadow-lg">
+              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-purple-100 mb-6 transition-all duration-300 shadow-md">
                 <FileText className="text-purple-600 w-8 h-8" />
               </div>
 
@@ -60,7 +60,7 @@ const ThreeWays1 = ({ onLogin }) => {
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl font-bold mb-3 text-gray-900 group-hover:text-purple-700 transition-colors">
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">
                 Show Your Skills
               </h3>
 
@@ -71,25 +71,25 @@ const ThreeWays1 = ({ onLogin }) => {
               </p>
 
               {/* Button */}
-            <button
-              onClick={handleAction}
-              className="w-full bg-purple-600 text-white py-3 rounded-full hover:bg-purple-700"
-            >
-              Create Profile
-            </button>
+              <button
+                onClick={handleAction}
+                className="w-full bg-purple-600 text-white py-3 rounded-full hover:bg-purple-700 transition-colors duration-200"
+              >
+                Create Profile
+              </button>
 
             </div>
           </div>
 
           {/* Card 2 - Start Selling */}
-          <div className="group relative rounded-3xl p-8 bg-white/80 backdrop-blur-sm text-left transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-lg border-2 border-pink-200/50 hover:border-pink-300">
+          <div className="group relative rounded-3xl p-8 bg-white/80 backdrop-blur-sm text-left transition-transform duration-300 hover:-translate-y-2 shadow-lg border-2 border-pink-200/50 hover:border-pink-300 hover:shadow-2xl">
             
             {/* Shimmer effect only */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-pink-100/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-pink-100/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"></div>
 
             <div className="relative z-10">
               {/* Icon */}
-              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-pink-100 mb-6 group-hover:bg-pink-200 group-hover:scale-105 transition-all duration-300 shadow-md group-hover:shadow-lg">
+              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-pink-100 mb-6 transition-all duration-300 shadow-md">
                 <ShoppingBag className="text-pink-600 w-8 h-8" />
               </div>
 
@@ -100,7 +100,7 @@ const ThreeWays1 = ({ onLogin }) => {
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl font-bold mb-3 text-gray-900 group-hover:text-pink-700 transition-colors">
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">
                 Start Selling
               </h3>
 
@@ -110,24 +110,24 @@ const ThreeWays1 = ({ onLogin }) => {
                 Set your own price. Suggestions help—never block.
               </p>
 
-               <button
-              onClick={handleAction}
-              className="w-full bg-pink-600 text-white py-3 rounded-full hover:bg-pink-700"
-            >
-              List a Service
-            </button>
+              <button
+                onClick={handleAction}
+                className="w-full bg-pink-600 text-white py-3 rounded-full hover:bg-pink-700 transition-colors duration-200"
+              >
+                List a Service
+              </button>
             </div>
           </div>
 
           {/* Card 3 - Find Jobs */}
-          <div className="group relative rounded-3xl p-8 bg-white/80 backdrop-blur-sm text-left transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-lg border-2 border-emerald-200/50 hover:border-emerald-300 md:col-span-2 lg:col-span-1">
+          <div className="group relative rounded-3xl p-8 bg-white/80 backdrop-blur-sm text-left transition-transform duration-300 hover:-translate-y-2 shadow-lg border-2 border-emerald-200/50 hover:border-emerald-300 hover:shadow-2xl md:col-span-2 lg:col-span-1">
             
             {/* Shimmer effect only */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-emerald-100/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-emerald-100/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"></div>
 
             <div className="relative z-10">
               {/* Icon */}
-              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-emerald-100 mb-6 group-hover:bg-emerald-200 group-hover:scale-105 transition-all duration-300 shadow-md group-hover:shadow-lg">
+              <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-emerald-100 mb-6 transition-all duration-300 shadow-md">
                 <Briefcase className="text-emerald-600 w-8 h-8" />
               </div>
 
@@ -138,7 +138,7 @@ const ThreeWays1 = ({ onLogin }) => {
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl font-bold mb-3 text-gray-900 group-hover:text-emerald-700 transition-colors">
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">
                 Find Jobs
               </h3>
 
@@ -148,12 +148,12 @@ const ThreeWays1 = ({ onLogin }) => {
                 Remote, part-time, flexible. Apply with your profile.
               </p>
 
-               <button
-              onClick={handleAction}
-              className="w-full bg-emerald-600 text-white py-3 rounded-full hover:bg-emerald-700"
-            >
-              Browse Jobs
-            </button>
+              <button
+                onClick={handleAction}
+                className="w-full bg-emerald-600 text-white py-3 rounded-full hover:bg-emerald-700 transition-colors duration-200"
+              >
+                Browse Jobs
+              </button>
             </div>
           </div>
 
