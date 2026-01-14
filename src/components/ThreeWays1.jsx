@@ -1,17 +1,19 @@
 import React from "react";
 import { FileText, ShoppingBag, Briefcase, ArrowRight, Sparkles, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const ThreeWays1 = ({ user, onLogin }) => {
+const ThreeWays1 = ({ onLogin }) => {
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handleCardClick = (type) => {
-    if (!user) {
-      onLogin();
+  const handleAction = () => {
+    if (user) {
+      navigate("/dashboard");
     } else {
-      navigate(`/dashboard?type=${type}`);
+      onLogin(); // open login modal
     }
-  };
+  }
   return (
     <section className="relative w-full py-16 md:py-4 overflow-hidden bg-gradient-to-b from-white via-purple-50/20 to-white">
       
@@ -69,10 +71,13 @@ const ThreeWays1 = ({ user, onLogin }) => {
               </p>
 
               {/* Button */}
-              <button onClick={() => handleCardClick('skills')} className="w-full py-3.5 rounded-full bg-purple-600 text-white font-bold hover:bg-purple-700 transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-xl hover:scale-[1.02]">
-                Create Profile
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+            <button
+              onClick={handleAction}
+              className="w-full bg-purple-600 text-white py-3 rounded-full hover:bg-purple-700"
+            >
+              Create Profile
+            </button>
+
             </div>
           </div>
 
@@ -105,11 +110,12 @@ const ThreeWays1 = ({ user, onLogin }) => {
                 Set your own price. Suggestions help—never block.
               </p>
 
-              {/* Button */}
-              <button className="w-full py-3.5 rounded-full bg-pink-600 text-white font-bold hover:bg-pink-700 transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-xl hover:scale-[1.02]">
-                List a Service 
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+               <button
+              onClick={handleAction}
+              className="w-full bg-pink-600 text-white py-3 rounded-full hover:bg-pink-700"
+            >
+              List a Service
+            </button>
             </div>
           </div>
 
@@ -142,11 +148,12 @@ const ThreeWays1 = ({ user, onLogin }) => {
                 Remote, part-time, flexible. Apply with your profile.
               </p>
 
-              {/* Button */}
-              <button onClick={() => handleCardClick('jobs')} className="w-full py-3.5 rounded-full bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-all duration-300 flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-xl hover:scale-[1.02]">
-                Browse Jobs
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+               <button
+              onClick={handleAction}
+              className="w-full bg-emerald-600 text-white py-3 rounded-full hover:bg-emerald-700"
+            >
+              Browse Jobs
+            </button>
             </div>
           </div>
 

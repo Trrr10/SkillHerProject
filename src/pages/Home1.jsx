@@ -1,5 +1,5 @@
 import { ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ThreeWays1 from "../components/ThreeWays1";
 
 import DynamicDash from "../components/DynamicDash";
@@ -124,7 +124,7 @@ function GlowPulse() {
   );
 }
 
-export default function Home1({ user, onLogin }) {
+export default function Home1({onLogin }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -133,6 +133,7 @@ export default function Home1({ user, onLogin }) {
 
   return (
     <>
+     
       <section className="relative min-h-[600px] overflow-hidden bg-gradient-to-b from-purple-50/50 via-white to-white">
         
         <GlowPulse />
@@ -188,7 +189,7 @@ with safety, dignity, and control.
         </div>
       </section>
 
-      <ThreeWays1 user={user} onLogin={onLogin} />
+     <ThreeWays1 onLogin={onLogin} />
   <DynamicDash />
 
       <Testimonials />
