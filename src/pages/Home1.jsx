@@ -118,8 +118,10 @@ function RisingElements() {
 function GlowPulse() {
   return (
     <>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-3xl animate-pulse-slower"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-[800px] h-[800px] bg-purple-500/10 dark:bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute w-[600px] h-[600px] bg-pink-500/10 dark:bg-pink-400/10 rounded-full blur-3xl animate-pulse-slower"></div>
+      </div>
     </>
   );
 }
@@ -134,7 +136,14 @@ export default function Home1({onLogin }) {
   return (
     <>
      
-      <section className="relative min-h-[600px] overflow-hidden bg-gradient-to-b from-purple-50/50 via-white to-white">
+       <section
+        className="
+        relative min-h-[600px] overflow-hidden
+        bg-gradient-to-b 
+        from-purple-50 via-white to-white
+        dark:from-gray-900 dark:via-gray-900 dark:to-gray-950
+      "
+      >
         
         <GlowPulse />
         <FloatingOrbs />
@@ -145,12 +154,26 @@ export default function Home1({onLogin }) {
           
        
 
-          <h1 className={`text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+
+          <h1 className={`text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white
+          leading-tight transition-all 
+            ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             Grow with Confidence
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-[length:200%_auto] animate-gradient inline-block">
-              Start Earning Today.
-            </span>
+           <span
+  className="
+    text-transparent bg-clip-text
+    bg-gradient-to-r
+    from-purple-600 via-pink-600 to-purple-600
+    dark:from-purple-400 dark:via-pink-400 dark:to-purple-400
+    bg-[length:200%_auto]
+    animate-gradient
+    inline-block
+  "
+>
+  Start Earning Today.
+</span>
+
           </h1>
 
           <p className={`max-w-2xl text-gray-600 mt-6 text-lg transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -165,25 +188,32 @@ with safety, dignity, and control.
               <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <button className="group bg-white/80 backdrop-blur-sm text-purple-600 px-8 py-4 rounded-xl flex items-center gap-2 border border-purple-200 hover:bg-purple-50 transition-all duration-300 hover:scale-105 shadow-md">
-              <Sparkles size={18} className="group-hover:rotate-12 transition-transform" /> 
-              See How It Works
-            </button>
           </div>
-
-          <div className={`flex flex-wrap gap-6 mt-14 text-gray-600 text-sm justify-center transition-all duration-1000 delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-full hover:scale-110 transition-transform cursor-default shadow-md border border-purple-100">
-  <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
-  <span className="font-semibold text-gray-800">Verified Employers</span>
-</span>
-<span className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-full hover:scale-110 transition-transform cursor-default shadow-md border border-purple-100">
-  <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" style={{animationDelay: '0.3s'}}></span>
-  <span className="font-semibold text-gray-800">Secure Payments</span>
-</span>
-<span className="flex items-center gap-2 bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-full hover:scale-110 transition-transform cursor-default shadow-md border border-purple-100">
-  <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" style={{animationDelay: '0.6s'}}></span>
-  <span className="font-semibold text-gray-800">24/7 Safety Support</span>
-</span>
+<div
+  className={`flex flex-wrap gap-6 mt-14 text-sm justify-center
+    text-gray-600 dark:text-gray-300
+    transition-all duration-1000 delay-800
+    ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
+  `}
+>
+     {["Verified Employers", "Secure Payments", "24/7 Safety Support"].map(
+              (text, i) => (
+                <span
+                  key={i}
+                  className="
+                  flex items-center gap-2 px-5 py-2.5 rounded-full
+                  bg-white/90 dark:bg-gray-800/80
+                  text-gray-800 dark:text-gray-200
+                  border border-purple-100 dark:border-gray-700
+                  shadow-md backdrop-blur-md
+                  hover:scale-110 transition
+                "
+                >
+                  <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                  <span className="font-semibold">{text}</span>
+                </span>
+              )
+            )}
             
           </div>
         </div>
