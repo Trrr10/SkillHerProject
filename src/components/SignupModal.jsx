@@ -1,6 +1,7 @@
 import { X, User, Briefcase, Sparkles, LayoutGrid, LogIn, Mail, Lock, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 
 export default function AuthModal({ type = "signup", onClose, onSwitch, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -11,15 +12,28 @@ export default function AuthModal({ type = "signup", onClose, onSwitch, onSucces
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    
-    setTimeout(() => {
-      localStorage.setItem("user", JSON.stringify(formData));
-      onSuccess(formData);
-      onClose();
-      setLoading(false);
-      navigate("/dashboard");
-    }, 800);
+  setLoading(true);
+
+  const { data, error } = await supabase.auth.signUp({
+    email: formData.email,
+    password: formData.password,
+    options: {
+      data: {
+        name: formData.name,
+        mode: formData.mode,
+      },
+    },
+  });
+
+  if (error) {
+    alert(error.message);
+    setLoading(false);
+    return;
+  }
+
+  onClose();
+  navigate("/dashboard");
+  setLoading(false);
   };
 
   return (
