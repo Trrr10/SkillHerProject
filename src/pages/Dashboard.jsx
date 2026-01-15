@@ -1,12 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
+
 import { 
   LogOut, BookOpen, Briefcase, Sparkles, 
   TrendingUp, ChevronRight,
-  PlusCircle, LayoutDashboard, Settings
+  LayoutDashboard, Settings
 } from "lucide-react";
 
 export default function Dashboard() {
-  const user = { name: "Vedika" };
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  // 🔐 Protect route
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/");
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) return null;
+
+  const name =
+    user?.user_metadata?.name ||
+    user?.email?.split("@")[0] ||
+    "User";
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
   return (
     <div className="
@@ -42,12 +66,15 @@ export default function Dashboard() {
           <NavItem icon={<Settings size={20} />} label="Settings" />
         </nav>
 
-        <button className="
-          flex items-center gap-3 p-3 mt-auto rounded-xl
-          text-slate-500 dark:text-slate-400
-          hover:bg-red-50 dark:hover:bg-red-500/10
-          hover:text-red-600
-        ">
+        <button
+          onClick={handleLogout}
+          className="
+            flex items-center gap-3 p-3 mt-auto rounded-xl
+            text-slate-500 dark:text-slate-400
+            hover:bg-red-50 dark:hover:bg-red-500/10
+            hover:text-red-600
+          "
+        >
           <LogOut size={20} />
           Logout
         </button>
@@ -62,7 +89,7 @@ export default function Dashboard() {
             text-3xl md:text-4xl font-extrabold
             text-slate-900 dark:text-white
           ">
-            Welcome back, {user.name} 👋
+            Welcome back, {name} 👋
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-2">
             Here's what's happening with your career today.
@@ -82,7 +109,9 @@ export default function Dashboard() {
           <div className="xl:col-span-2 space-y-8">
 
             <GlassCard title="Continuous Learning" icon={<BookOpen />}>
-            <button className="text-purple-600 text-sm font-bold hover:underline hover:text-purple-700">View All →</button>
+              <button className="text-purple-600 text-sm font-bold hover:underline hover:text-purple-700">
+                View All →
+              </button>
               <ProgressItem title="Web Development Basics" progress={70} />
               <ProgressItem title="UI/UX Masterclass" progress={40} />
             </GlassCard>
