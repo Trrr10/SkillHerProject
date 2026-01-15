@@ -99,6 +99,7 @@ const ThreeWays1 = ({ onLogin }) => {
             Create Profile
           </button>
         </div>
+
       </div>
 
       {/* CARD 2 */}
