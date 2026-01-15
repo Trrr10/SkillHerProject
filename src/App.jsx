@@ -11,6 +11,9 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
+import StartSelling from "./pages/StartSelling";
+
+
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -66,6 +69,17 @@ function App() {
           path="/dashboard"
           element={user ? <Dashboard /> : <Home1 onLogin={() => setShowLogin(true)} />}
         />
+        <Route
+          path="/start-selling"
+          element={
+          user ? (
+          <StartSelling />
+           ) : (
+          <Home1 onLogin={() => setShowLogin(true)} />
+           )  
+       }
+     />
+
       </Routes>
 
       <Footer />

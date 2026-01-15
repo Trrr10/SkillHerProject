@@ -128,6 +128,8 @@ function GlowPulse() {
 
 export default function Home1({onLogin }) {
   const [isVisible, setIsVisible] = useState(false);
+    
+
 
   useEffect(() => {
     setIsVisible(true);

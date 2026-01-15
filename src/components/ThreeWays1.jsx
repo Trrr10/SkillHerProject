@@ -14,6 +14,14 @@ const ThreeWays1 = ({ onLogin }) => {
       onLogin(); // open login modal
     }
   }
+  const handleListService = () => {
+  if (user) {
+    navigate("/start-selling");
+  } else {
+    onLogin();
+  }
+};
+
   return (
     <section
   className="
@@ -138,7 +146,7 @@ const ThreeWays1 = ({ onLogin }) => {
           </p>
 
           <button
-            onClick={handleAction}
+            onClick={handleListService}
             className="w-full py-3 rounded-full font-medium
               bg-pink-600 hover:bg-pink-700
               dark:bg-pink-500 dark:hover:bg-pink-600
