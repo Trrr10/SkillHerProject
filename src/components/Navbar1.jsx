@@ -1,9 +1,21 @@
 import { Link } from "react-router-dom";
 import { Sparkles, ChevronRight, LogOut } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Navbar({ user, onLogin, onSignup, onLogout }) {
+  const { theme, toggleTheme } = useTheme();
+
   return (
-    <nav className="sticky top-0 z-50 bg-white/30 backdrop-blur-md border-b border-white/20">
+    <nav
+      className="
+        sticky top-0 z-50
+        bg-white/30 dark:bg-gray-900/60
+        backdrop-blur-md
+        border-b border-white/20 dark:border-gray-700/40
+        transition-colors duration-300
+      "
+    >
       <div className="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
 
         {/* Logo */}
@@ -31,43 +43,50 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
 
    {/* Navigation Links - Enhanced */}
         <div className="flex gap-10 items-center">
-          <Link 
-            to="/" 
-            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
-          >
-            Home
-            {/* Animated dot indicator */}
-            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
-            {/* Underline effect */}
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
-          </Link>
-          
-          <Link 
-            to="/about" 
-            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
-          >
-            About
-            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+         {[
+            { to: "/", label: "Home" },
+            { to: "/about", label: "About" },
+            { to: "/learnings", label: "Learnings" },
+            { to: "/contact", label: "Contact" },
+          ].map(({ to, label }) => (
+            <Link
+              key={label}
+              to={to}
+              className="
+                relative font-semibold text-2xl tracking-wide
+                text-gray-700 dark:text-gray-200
+                hover:text-transparent hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:bg-clip-text
+                transition-all duration-300 group
+              "
+            >
+              {label}
 
- </Link>
-           <Link 
-            to="/learnings" 
-            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
-          >
-            Learnings
-            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
-          </Link>
-          
-          <Link 
-            to="/contact" 
-            className="relative text-gray-700 font-semibold text-2xl tracking-wide hover:text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:bg-clip-text transition-all duration-300 group"
-          >
-            Contact
-            <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
-          </Link>
+              {/* Dot indicator */}
+              <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition"></span>
+
+              {/* Underline */}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full"></span>
+            </Link>
+          ))}
+          <button
+  onClick={toggleTheme}
+  className="
+    p-2 rounded-full
+    bg-white dark:bg-gray-800
+    border border-gray-300 dark:border-gray-600
+    hover:scale-110 transition
+  "
+  aria-label="Toggle Theme"
+>
+  {theme === "light" ? (
+    <Moon className="w-5 h-5 text-gray-800" />
+  ) : (
+    <Sun className="w-5 h-5 text-yellow-400" />
+  )}
+</button>
+
+
+
           {/* 🔐 AUTH SECTION */}
           {!user ? (
             <>
@@ -100,13 +119,19 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
           ) : (
             <>
               {/* Logged-in View */}
-              <span className="text-lg font-semibold text-purple-700">
+              <span className="text-lg font-semibold text-purple-600 dark:text-purple-400">
                 Hi, {user.name} 👋
               </span>
 
-              <button
+
+               <button
                 onClick={onLogout}
-                className="flex items-center gap-2 text-red-500 font-semibold hover:text-red-700 transition"
+                className="
+                  flex items-center gap-2
+                  text-red-500 hover:text-red-700
+                  dark:text-red-400 dark:hover:text-red-300
+                  font-semibold transition
+                "
               >
                 <LogOut size={18} />
                 Logout

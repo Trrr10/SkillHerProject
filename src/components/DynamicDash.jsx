@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Users, 
-  Briefcase, 
+import {
+  TrendingUp,
+  DollarSign,
+  Users,
+  Briefcase,
   Star,
   ArrowUpRight,
   Award,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
 const DynamicDash = () => {
@@ -18,7 +18,6 @@ const DynamicDash = () => {
     activeServices: 0,
   });
 
-  // Animate numbers on load
   useEffect(() => {
     const finalStats = {
       newUsers: 1247,
@@ -27,9 +26,7 @@ const DynamicDash = () => {
       activeServices: 2156,
     };
 
-    const duration = 2000;
     const steps = 60;
-    const stepDuration = duration / steps;
     let currentStep = 0;
 
     const timer = setInterval(() => {
@@ -39,7 +36,9 @@ const DynamicDash = () => {
       setStats({
         newUsers: Math.floor(finalStats.newUsers * progress),
         jobsPosted: Math.floor(finalStats.jobsPosted * progress),
-        platformRating: parseFloat((finalStats.platformRating * progress).toFixed(1)),
+        platformRating: parseFloat(
+          (finalStats.platformRating * progress).toFixed(1)
+        ),
         activeServices: Math.floor(finalStats.activeServices * progress),
       });
 
@@ -47,98 +46,84 @@ const DynamicDash = () => {
         setStats(finalStats);
         clearInterval(timer);
       }
-    }, stepDuration);
+    }, 30);
 
     return () => clearInterval(timer);
   }, []);
 
   const statCards = [
-    {
-      title: "Active Women",
-      value: stats.newUsers.toLocaleString(),
-      change: "+156 this week",
-      icon: Users,
-      color: "purple",
-    },
-    {
-      title: "Jobs Posted",
-      value: stats.jobsPosted.toLocaleString(),
-      change: "+42 today",
-      icon: Briefcase,
-      color: "pink",
-    },
-    {
-      title: "Platform Rating",
-      value: stats.platformRating,
-      change: "2.3K reviews",
-      icon: Star,
-      color: "yellow",
-    },
-    {
-      title: "Active Services",
-      value: stats.activeServices.toLocaleString(),
-      change: "+89 this week",
-      icon: TrendingUp,
-      color: "emerald",
-    },
+    { title: "Active Women", value: stats.newUsers, icon: Users, color: "purple" },
+    { title: "Jobs Posted", value: stats.jobsPosted, icon: Briefcase, color: "pink" },
+    { title: "Platform Rating", value: stats.platformRating, icon: Star, color: "yellow" },
+    { title: "Active Services", value: stats.activeServices, icon: TrendingUp, color: "emerald" },
   ];
 
   return (
-    <section className="relative w-full py-16 md:py-8 overflow-hidden bg-gradient-to-b from-white via-purple-50/20 to-white">
-      
-      {/* Subtle floating orbs */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-purple-200/30 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
-      <div className="absolute bottom-20 left-10 w-80 h-80 bg-pink-200/30 rounded-full mix-blend-multiply filter blur-3xl animate-float-slow"></div>
+    <section className="relative w-full py-16 overflow-hidden
+      bg-gradient-to-b from-white via-purple-50/30 to-white
+      dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+      {/* Floating Orbs */}
+      <div className="absolute top-20 right-10 w-72 h-72 bg-purple-300/30 dark:bg-purple-600/20 rounded-full blur-3xl animate-float"></div>
+      <div className="absolute bottom-20 left-10 w-80 h-80 bg-pink-300/30 dark:bg-pink-600/20 rounded-full blur-3xl animate-float-slow"></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 bg-purple-100 px-4 py-2 rounded-full text-sm mb-4 shadow-sm">
-            <Sparkles className="w-4 h-4 text-purple-600" />
-            <span className="font-semibold text-purple-700">Real-Time Insights</span>
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2
+            bg-purple-100 dark:bg-purple-900/40
+            px-4 py-2 rounded-full text-sm mb-4 shadow-sm">
+            <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <span className="font-semibold text-purple-700 dark:text-purple-300">
+              Real-Time Insights
+            </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+
+          <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
             Our Growing Community
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             See how women are thriving on our platform every single day
           </p>
         </div>
 
-        {/* Stats Grid - Responsive */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
-          {statCards.map((card, index) => {
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {statCards.map((card, i) => {
             const Icon = card.icon;
             return (
               <div
-                key={index}
-                className="group bg-white/80 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 border-gray-100 hover:border-purple-200 relative overflow-hidden"
-              >
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-purple-100/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+                key={i}
+                className="group relative rounded-2xl p-6
+                  bg-white/80 dark:bg-gray-900/70 backdrop-blur
+                  shadow-lg dark:shadow-black/40
+                  border border-gray-200 dark:border-gray-700
+                  hover:-translate-y-1 transition-all">
+
+                <div className="absolute inset-0 rounded-2xl
+                  bg-gradient-to-r from-transparent via-purple-200/30 dark:via-purple-500/10 to-transparent
+                  -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
                 <div className="relative z-10">
-                  <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${
-                    card.color === 'purple' ? 'bg-purple-100' :
-                    card.color === 'pink' ? 'bg-pink-100' :
-                    card.color === 'yellow' ? 'bg-yellow-100' :
-                    'bg-emerald-100'
-                  } flex items-center justify-center mb-3 md:mb-4 shadow-md group-hover:scale-105 transition-transform duration-300`}>
-                    <Icon className={`${
-                      card.color === 'purple' ? 'text-purple-600' :
-                      card.color === 'pink' ? 'text-pink-600' :
-                      card.color === 'yellow' ? 'text-yellow-600' :
-                      'text-emerald-600'
-                    }`} size={24} />
+                  <div className="w-14 h-14 rounded-xl mb-4
+                    flex items-center justify-center shadow-md
+                    bg-gray-100 dark:bg-gray-800">
+                    <Icon className="text-purple-600 dark:text-purple-400" />
                   </div>
-                  <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-2">{card.title}</p>
-                  <p className="text-2xl md:text-3xl font-bold mb-2 text-gray-900">
-                    {card.value}
+
+                  <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">
+                    {card.title}
                   </p>
-                  <div className="flex items-center gap-1 text-xs font-medium text-emerald-600">
+
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                    {card.value.toLocaleString()}
+                  </p>
+
+                  <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs mt-1">
                     <ArrowUpRight size={12} />
-                    <span>{card.change}</span>
+                    Growing fast
                   </div>
                 </div>
               </div>
@@ -146,100 +131,66 @@ const DynamicDash = () => {
           })}
         </div>
 
-        {/* Main Content - Simplified Layout */}
+        {/* Earnings + Achievements */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Total Earnings - Featured Card */}
-          <div className="lg:col-span-2 bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-3xl shadow-2xl p-6 md:p-8 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-24 -translate-x-24"></div>
-            
+
+          {/* Earnings */}
+          <div className="lg:col-span-2 rounded-3xl p-8 text-white
+            bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600
+            shadow-2xl relative overflow-hidden">
+
+            <div className="absolute inset-0 bg-black/10"></div>
+
             <div className="relative z-10">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <div>
-                  <p className="text-purple-100 text-sm font-medium mb-2">Total Earnings by Women</p>
-                  <h2 className="text-4xl md:text-5xl font-bold mb-2">$1.2M</h2>
-                  <div className="flex items-center gap-2 text-purple-100">
-                    <ArrowUpRight size={16} />
-                    <span className="text-sm font-medium">+34% from last period</span>
+              <p className="text-purple-100 mb-2">Total Earnings by Women</p>
+              <h2 className="text-5xl font-bold mb-2">$1.2M</h2>
+
+              <div className="flex items-center gap-2 text-purple-100 mb-6">
+                <ArrowUpRight />
+                +34% from last period
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                {["$4,850 Avg", "$28.5K Top", "$295K Month"].map((t, i) => (
+                  <div key={i} className="bg-white/10 rounded-xl p-4 border border-white/20">
+                    <p className="text-sm font-semibold">{t}</p>
                   </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Achievements */}
+          <div className="space-y-6">
+            <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur rounded-2xl p-6
+              shadow-lg border border-purple-200 dark:border-purple-700/40">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/40 rounded-xl flex items-center justify-center">
+                  <Award className="text-purple-600 dark:text-purple-400" />
                 </div>
-                <div className="hidden md:flex w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl items-center justify-center">
-                  <DollarSign size={40} />
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Top Category</p>
+                  <p className="font-bold text-gray-900 dark:text-white">Design Services</p>
                 </div>
               </div>
+            </div>
 
-              {/* Mini Stats */}
-              <div className="grid grid-cols-3 gap-3 md:gap-4 mt-6 md:mt-8">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4 border border-white/20">
-                  <p className="text-purple-100 text-xs mb-1">Avg per User</p>
-                  <p className="text-lg md:text-2xl font-bold">$4,850</p>
+            <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur rounded-2xl p-6
+              shadow-lg border border-pink-200 dark:border-pink-700/40">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/40 rounded-xl flex items-center justify-center">
+                  <Star className="text-pink-600 dark:text-pink-400" />
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4 border border-white/20">
-                  <p className="text-purple-100 text-xs mb-1">Top Earner</p>
-                  <p className="text-lg md:text-2xl font-bold">$28.5K</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4 border border-white/20">
-                  <p className="text-purple-100 text-xs mb-1">This Month</p>
-                  <p className="text-lg md:text-2xl font-bold">$295K</p>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Success Rate</p>
+                  <p className="font-bold text-gray-900 dark:text-white">94.7%</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Achievement Cards */}
-          <div className="space-y-4 md:space-y-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-purple-200/50 hover:border-purple-300 transition-all duration-300 hover:-translate-y-1">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                  <Award size={24} className="text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-gray-500 text-sm">Top Category</p>
-                  <p className="text-xl font-bold text-gray-900">Design Services</p>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm">45% of all earnings</p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-pink-200/50 hover:border-pink-300 transition-all duration-300 hover:-translate-y-1">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
-                  <Star size={24} className="text-pink-600" />
-                </div>
-                <div>
-                  <p className="text-gray-500 text-sm">Success Rate</p>
-                  <p className="text-xl font-bold text-gray-900">94.7%</p>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm">Projects completed successfully</p>
-            </div>
-          </div>
         </div>
-
       </div>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0); }
-          33% { transform: translate(20px, -20px); }
-          66% { transform: translate(-15px, 15px); }
-        }
-        
-        @keyframes float-slow {
-          0%, 100% { transform: translate(0, 0); }
-          33% { transform: translate(-25px, 20px); }
-          66% { transform: translate(20px, -15px); }
-        }
-        
-        .animate-float {
-          animation: float 20s ease-in-out infinite;
-        }
-        
-        .animate-float-slow {
-          animation: float-slow 25s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 };
