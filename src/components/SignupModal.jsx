@@ -4,37 +4,65 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 
 export default function AuthModal({ type = "signup", onClose, onSwitch, onSuccess }) {
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", mode: "Both" });
+const [loading, setLoading] = useState(false);
+
+const [formData, setFormData] = useState({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  mode: "Both",
+});
+
   const navigate = useNavigate();
 
   const isSignup = type === "signup";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  
   setLoading(true);
+if (isSignup && formData.password !== formData.confirmPassword) {
+  alert("Passwords do not match");
+  setLoading(false);
+  return;
+} 
+  let result;
 
-  const { data, error } = await supabase.auth.signUp({
-    email: formData.email,
-    password: formData.password,
-    options: {
-      data: {
-        name: formData.name,
-        mode: formData.mode,
+  if (isSignup) {
+    // SIGN UP
+    result = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          name: formData.name,
+          mode: formData.mode,
+        },
       },
-    },
-  });
+    });
+  } else {
+    // LOGIN
+    result = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    });
+  }
+
+  const { error } = result;
 
   if (error) {
     alert(error.message);
     setLoading(false);
     return;
   }
+onSuccess?.(result.data.user);
 
   onClose();
   navigate("/dashboard");
   setLoading(false);
-  };
+};
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
@@ -82,32 +110,44 @@ export default function AuthModal({ type = "signup", onClose, onSwitch, onSucces
 
             <div className="relative">
               <Mail className="absolute left-4 top-3.5 text-gray-400" size={18} />
-              <input
-                required
-                type="email"
-                placeholder="Email Address"
-                className="w-full border border-gray-200 pl-12 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-transparent outline-none transition-all"
-              />
+             <input
+  required
+  type="email"
+  placeholder="Email Address"
+  value={formData.email}
+  onChange={(e) =>
+    setFormData({ ...formData, email: e.target.value })
+  }
+  className="w-full border border-gray-200 pl-12 pr-4 py-3 rounded-xl"
+/>
+
             </div>
 
-            <div className="relative">
-              <Lock className="absolute left-4 top-3.5 text-gray-400" size={18} />
-              <input
-                required
-                type="password"
-                placeholder="Set your Password"
-                className="w-full border border-gray-200 pl-12 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-transparent outline-none transition-all"
-              />
-            </div>
+           <input
+  required
+  type="password"
+  placeholder={isSignup ? "Set your Password" : "Enter Password"}
+  value={formData.password}
+  onChange={(e) =>
+    setFormData({ ...formData, password: e.target.value })
+  }
+  className="w-full border border-gray-200 pl-12 pr-4 py-3 rounded-xl"
+/>
+
 
             <div className="relative">
-              <Lock className="absolute left-4 top-3.5 text-gray-400" size={18} />
-              <input
-                required
-                type="password"
-                placeholder="Confirm Password"
-                className="w-full border border-gray-200 pl-12 pr-4 py-3 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-transparent outline-none transition-all"
-              />
+             {isSignup && (
+  <input
+    required
+    type="password"
+    placeholder="Confirm Password"
+    className="w-full border border-gray-200 pl-12 pr-4 py-3 rounded-xl"
+    onChange={(e) =>
+      setFormData({ ...formData, confirmPassword: e.target.value })
+    }
+  />
+)}
+
             </div>
 
             {isSignup && (

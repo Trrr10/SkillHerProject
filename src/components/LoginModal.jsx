@@ -1,26 +1,36 @@
 import { X, LogIn, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { supabase } from "../supabaseClient"; // ✅ added
 
 export default function LoginModal({ onClose, onSignup, onSuccess }) {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault(); // Prevents page refresh
+  // ✅ made async
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setError("");
 
-    if (!formData.name || !formData.email || !formData.password) {
-      setError("Please fill in all fields to continue.");
+    if (!formData.email || !formData.password) {
+      setError("Email and password are required.");
       return;
     }
 
-    // Logic
-    const userData = { name: formData.name, email: formData.email };
-    localStorage.setItem("user", JSON.stringify(userData));
+    // ✅ Supabase login
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    });
 
-    onSuccess(userData);
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    // ✅ success
+    onSuccess?.(data.user);
     onClose();
     navigate("/dashboard");
   };
@@ -52,13 +62,13 @@ export default function LoginModal({ onClose, onSignup, onSuccess }) {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl text-center animate-shake">
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
-          {/* Name Input */}
+          {/* Name Input (kept as-is) */}
           <div className="relative">
             <User className="absolute left-4 top-3.5 text-gray-400" size={18} />
             <input
@@ -104,11 +114,8 @@ export default function LoginModal({ onClose, onSignup, onSuccess }) {
           <button
             type="submit"
             className="group relative w-full py-3.5 rounded-xl font-bold text-white overflow-hidden transition-all duration-300 shadow-lg hover:shadow-purple-500/40 active:scale-[0.98]"
-            style={{
-              background: "linear-gradient(135deg, #7C3AED, #EC4899)",
-            }}
+            style={{ background: "linear-gradient(135deg, #7C3AED, #EC4899)" }}
           >
-            <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
             <span className="relative flex items-center justify-center gap-2 text-lg">
               <LogIn size={20} />
               Log In
