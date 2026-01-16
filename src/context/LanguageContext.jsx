@@ -7,7 +7,7 @@ const translations = {
   en: {
     "nav-home": "Home",
     "nav-about": "About",
-    "nav-learnings": "Learnings",
+    "nav-funding": "Fundings",
     "nav-contact": "Contact",
     "nav-login": "Log In",
     "nav-signup": "Sign Up",
@@ -110,7 +110,7 @@ const translations = {
   hi: {
     "nav-home": "होम",
     "nav-about": "परिचय",
-    "nav-learnings": "सीख",
+    "nav-funding": "वित्तपोषण",
     "nav-contact": "संपर्क",
     "nav-login": "लॉग इन",
     "nav-signup": "साइन अप",
@@ -233,7 +233,7 @@ const translations = {
   mr: {
     "nav-home": "मुख्यपृष्ठ",
     "nav-about": "माहिती",
-    "nav-learnings": "शिकणे",
+    "nav-funding": "अनुदान",
     "nav-contact": "संपर्क",
     "nav-login": "लॉग इन",
     "nav-signup": "नोंदणी",
