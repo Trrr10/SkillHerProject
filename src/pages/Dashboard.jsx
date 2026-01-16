@@ -22,29 +22,31 @@ export default function Dashboard() {
       navigate("/");
     }
   }, [user, loading, navigate]);
-useEffect(() => {
-  const savedCourses = JSON.parse(localStorage.getItem("enrolled_courses") || "[]");
-  
-  // 🧹 AUTO-CLEAN: Remove any duplicates that might have slipped in
-  const uniqueCourses = savedCourses.filter((course, index, self) =>
-    index === self.findIndex((c) => c.id === course.id)
-  );
- 
 
-  setEnrolledCourses(uniqueCourses);
-  
-  // Optional: Sync the cleaned list back to storage
-  if (uniqueCourses.length !== savedCourses.length) {
-    localStorage.setItem("enrolled_courses", JSON.stringify(uniqueCourses));
-  }
-}, []);
+  useEffect(() => {
+    const savedCourses = JSON.parse(localStorage.getItem("enrolled_courses") || "[]");
+    
+    // 🧹 AUTO-CLEAN: Remove any duplicates that might have slipped in
+    const uniqueCourses = savedCourses.filter((course, index, self) =>
+      index === self.findIndex((c) => c.id === course.id)
+    );
+   
+    setEnrolledCourses(uniqueCourses);
+    
+    // Optional: Sync the cleaned list back to storage
+    if (uniqueCourses.length !== savedCourses.length) {
+      localStorage.setItem("enrolled_courses", JSON.stringify(uniqueCourses));
+    }
+  }, []);
+
   if (loading) return null;
-const handleUnenroll = (courseId) => {
-  const updated = enrolledCourses.filter(c => c.id !== courseId);
-  setEnrolledCourses(updated);
-  localStorage.setItem("enrolled_courses", JSON.stringify(updated));
-  setShowConfirm(null);
-};
+
+  const handleUnenroll = (courseId) => {
+    const updated = enrolledCourses.filter(c => c.id !== courseId);
+    setEnrolledCourses(updated);
+    localStorage.setItem("enrolled_courses", JSON.stringify(updated));
+    setShowConfirm(null);
+  };
 
   const name =
     user?.user_metadata?.name ||
@@ -57,7 +59,7 @@ const handleUnenroll = (courseId) => {
   };
 
   const handleProfileClick = () => {
-    navigate("/profile"); // Assuming the profile route is "/profile"
+    navigate("/profile");
   };
 
   return (
@@ -105,7 +107,14 @@ const handleUnenroll = (courseId) => {
         <nav className="space-y-2 flex-1">
           <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active />
           <NavItem icon={<BookOpen size={20} />} label="My Courses" />
-          <NavItem icon={<Briefcase size={20} />} label="Job Board" />
+          <NavItem
+            icon={<Briefcase size={20} />}
+            label="Job Board"
+            onClick={() => {
+              console.log("Job Board clicked!"); // Debug log
+              navigate("/jobs");
+            }}
+          />
           <NavItem icon={<Sparkles size={20} />} label="Services" />
           <NavItem icon={<Settings size={20} />} label="Settings" />
         </nav>
@@ -158,66 +167,67 @@ const handleUnenroll = (courseId) => {
           <div className="xl:col-span-2 space-y-8">
             <GlassCard title="Continuous Learning" icon={<BookOpen />}>
               <button 
-                onClick={() => navigate("/courses")}
+                onClick={() => navigate("/See-Courses")}
                 className="text-purple-600 text-sm font-bold hover:underline hover:text-purple-700"
               >
                 View All →
               </button>
-{/* CONFIRMATION MODAL */}
-      <AnimatePresence>
-        {showConfirm && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-[#121826] p-8 rounded-3xl max-w-sm w-full shadow-2xl border border-red-100 dark:border-red-900/30 text-center"
-            >
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertCircle size={32} />
-              </div>
-              <h3 className="text-xl font-bold dark:text-white">Are you sure?</h3>
-              <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
-                You will lose all your learning data and progress for this course. This cannot be undone.
-              </p>
-              <div className="flex gap-3 mt-6">
-                <button 
-                  onClick={() => setShowConfirm(null)}
-                  className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold"
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={() => handleUnenroll(showConfirm)}
-                  className="flex-1 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700"
-                >
-                  Unenroll
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-              {/* UPDATED: Dynamic Progress Items */}
-             {enrolledCourses.length > 0 ? (
-  enrolledCourses.map((course) => (
-    <div key={course.id} className="relative group">
-      <ProgressItem title={course.title} progress={course.progress || 0} />
-      <button 
-        onClick={() => setShowConfirm(course.id)}
-        className="absolute -right-2 top-0 p-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
-      >
-        <Trash2 size={16} />
-      </button>
-    </div>
-  ))
-) : (
-  <p className="text-slate-500 text-sm italic py-4">
-    No courses enrolled yet. Head to the Explore section!
-  </p>
-)}
 
-  </GlassCard>
+              {/* CONFIRMATION MODAL */}
+              <AnimatePresence>
+                {showConfirm && (
+                  <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <motion.div 
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      className="bg-white dark:bg-[#121826] p-8 rounded-3xl max-w-sm w-full shadow-2xl border border-red-100 dark:border-red-900/30 text-center"
+                    >
+                      <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <AlertCircle size={32} />
+                      </div>
+                      <h3 className="text-xl font-bold dark:text-white">Are you sure?</h3>
+                      <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
+                        You will lose all your learning data and progress for this course. This cannot be undone.
+                      </p>
+                      <div className="flex gap-3 mt-6">
+                        <button 
+                          onClick={() => setShowConfirm(null)}
+                          className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          onClick={() => handleUnenroll(showConfirm)}
+                          className="flex-1 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700"
+                        >
+                          Unenroll
+                        </button>
+                      </div>
+                    </motion.div>
+                  </div>
+                )}
+              </AnimatePresence>
+
+              {/* UPDATED: Dynamic Progress Items */}
+              {enrolledCourses.length > 0 ? (
+                enrolledCourses.map((course) => (
+                  <div key={course.id} className="relative group">
+                    <ProgressItem title={course.title} progress={course.progress || 0} />
+                    <button 
+                      onClick={() => setShowConfirm(course.id)}
+                      className="absolute -right-2 top-0 p-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-500 text-sm italic py-4">
+                  No courses enrolled yet. Head to the Explore section!
+                </p>
+              )}
+            </GlassCard>
         
             <GlassCard title="Your Active Services" icon={<Sparkles />}>
               <div className="grid md:grid-cols-2 gap-4">
@@ -234,14 +244,17 @@ const handleUnenroll = (courseId) => {
             <JobItem company="Content Writer" type="Part-time" status="Shortlisted" />
             <JobItem company="UI Designer" type="Contract" status="Closed" />
 
-            <button className="
-              w-full mt-6 py-3 rounded-xl
-              bg-slate-100 dark:bg-white/5
-              text-slate-700 dark:text-slate-300
-              hover:bg-purple-50 dark:hover:bg-purple-500/10
-              border border-slate-200 dark:border-white/10
-              flex items-center justify-center gap-2
-            ">
+            <button 
+              onClick={() => navigate("/jobs")}
+              className="
+                w-full mt-6 py-3 rounded-xl
+                bg-slate-100 dark:bg-white/5
+                text-slate-700 dark:text-slate-300
+                hover:bg-purple-50 dark:hover:bg-purple-500/10
+                border border-slate-200 dark:border-white/10
+                flex items-center justify-center gap-2
+              "
+            >
               Search More Jobs <ChevronRight size={16} />
             </button>
           </GlassCard>
@@ -254,14 +267,18 @@ const handleUnenroll = (courseId) => {
 
 /* ---------- Components ---------- */
 
-function NavItem({ icon, label, active }) {
+function NavItem({ icon, label, active, onClick }) {
   return (
-    <div className={`
-      flex items-center gap-3 p-3 rounded-xl cursor-pointer
-      ${active
-        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-        : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5"}
-    `}>
+    <div 
+      onClick={onClick}
+      className={`
+        flex items-center gap-3 p-3 rounded-xl cursor-pointer
+        transition-all duration-200
+        ${active
+          ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
+          : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5"}
+      `}
+    >
       {icon}
       <span className="font-semibold text-sm">{label}</span>
     </div>

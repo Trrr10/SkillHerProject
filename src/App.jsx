@@ -17,7 +17,7 @@ import Funding from "./pages/Funding";
 
 import Footer from "./components/Footer";
 import ExploreProducts from "./pages/ExploreProducts";
-
+import StartSelling from "./pages/StartSelling";
 import CreateProfile from "./pages/CreateProfile";
 import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
@@ -108,10 +108,6 @@ function App() {
         
         <Route path="/jobs" element={<JobsPage />} />
 
-
-
-        <Route path="/explore" element={<ExploreProducts />} />
-        <Route path="/jobs" element={<JobsPage />} />
       </Routes>
 
       <Footer />
