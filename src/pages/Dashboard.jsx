@@ -105,18 +105,38 @@ export default function Dashboard() {
         </h1>
 
         <nav className="space-y-2 flex-1">
-          <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active />
-          <NavItem icon={<BookOpen size={20} />} label="My Courses" />
+          <NavItem 
+            icon={<LayoutDashboard size={20} />} 
+            label="Dashboard" 
+            active 
+            onClick={() => navigate("/dashboard")}
+          />
+          <NavItem 
+            icon={<BookOpen size={20} />} 
+            label="My Courses"
+            onClick={() => {
+              console.log("My Courses clicked!");
+              navigate("/See-Courses");
+            }}
+          />
           <NavItem
             icon={<Briefcase size={20} />}
             label="Job Board"
             onClick={() => {
-              console.log("Job Board clicked!"); // Debug log
+              console.log("Job Board clicked!");
               navigate("/jobs");
             }}
           />
-          <NavItem icon={<Sparkles size={20} />} label="Services" />
-          <NavItem icon={<Settings size={20} />} label="Settings" />
+          <NavItem 
+            icon={<Sparkles size={20} />} 
+            label="Services"
+            onClick={() => navigate("/services")}
+          />
+          <NavItem 
+            icon={<Settings size={20} />} 
+            label="Settings"
+            onClick={() => navigate("/settings")}
+          />
         </nav>
 
         <button
@@ -126,6 +146,7 @@ export default function Dashboard() {
             text-slate-500 dark:text-slate-400
             hover:bg-red-50 dark:hover:bg-red-500/10
             hover:text-red-600
+            transition-all duration-200
           "
         >
           <LogOut size={20} />
@@ -168,7 +189,7 @@ export default function Dashboard() {
             <GlassCard title="Continuous Learning" icon={<BookOpen />}>
               <button 
                 onClick={() => navigate("/See-Courses")}
-                className="text-purple-600 text-sm font-bold hover:underline hover:text-purple-700"
+                className="text-purple-600 text-sm font-bold hover:underline hover:text-purple-700 transition-colors"
               >
                 View All →
               </button>
@@ -193,13 +214,13 @@ export default function Dashboard() {
                       <div className="flex gap-3 mt-6">
                         <button 
                           onClick={() => setShowConfirm(null)}
-                          className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold"
+                          className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                         >
                           Cancel
                         </button>
                         <button 
                           onClick={() => handleUnenroll(showConfirm)}
-                          className="flex-1 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700"
+                          className="flex-1 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition-colors"
                         >
                           Unenroll
                         </button>
@@ -217,6 +238,7 @@ export default function Dashboard() {
                     <button 
                       onClick={() => setShowConfirm(course.id)}
                       className="absolute -right-2 top-0 p-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                      title="Unenroll from course"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -253,6 +275,8 @@ export default function Dashboard() {
                 hover:bg-purple-50 dark:hover:bg-purple-500/10
                 border border-slate-200 dark:border-white/10
                 flex items-center justify-center gap-2
+                transition-all duration-200
+                hover:shadow-md
               "
             >
               Search More Jobs <ChevronRight size={16} />
@@ -275,8 +299,8 @@ function NavItem({ icon, label, active, onClick }) {
         flex items-center gap-3 p-3 rounded-xl cursor-pointer
         transition-all duration-200
         ${active
-          ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-          : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5"}
+          ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
+          : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400"}
       `}
     >
       {icon}
@@ -292,7 +316,7 @@ function StatCard({ title, value, icon, emoji }) {
       bg-white/90 dark:bg-white/5
       border border-purple-100 dark:border-white/10
       backdrop-blur
-      hover:shadow-xl transition
+      hover:shadow-xl transition-shadow duration-300
     ">
       <div className="p-4 rounded-xl bg-purple-100 dark:bg-purple-500/10">
         {icon}
@@ -331,9 +355,9 @@ function ProgressItem({ title, progress }) {
         <span className="text-slate-700 dark:text-slate-300">{title}</span>
         <span className="font-bold text-purple-600">{progress}%</span>
       </div>
-      <div className="h-3 rounded-full bg-slate-200 dark:bg-white/10">
+      <div className="h-3 rounded-full bg-slate-200 dark:bg-white/10 overflow-hidden">
         <div
-          className="h-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
+          className="h-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -347,7 +371,7 @@ function ServiceCard({ title, orders, revenue }) {
       p-5 rounded-xl
       border border-purple-200 dark:border-white/10
       bg-white/80 dark:bg-white/5
-      hover:shadow-lg transition
+      hover:shadow-lg transition-shadow duration-300
     ">
       <h3 className="font-bold text-slate-800 dark:text-white">{title}</h3>
       <p className="text-xs text-slate-500 dark:text-slate-400">Orders: {orders}</p>
@@ -360,7 +384,7 @@ function JobItem({ company, type, status }) {
   return (
     <div className="
       flex justify-between items-center p-3 rounded-xl
-      hover:bg-purple-50 dark:hover:bg-white/5 transition
+      hover:bg-purple-50 dark:hover:bg-white/5 transition-colors duration-200
     ">
       <div>
         <p className="font-semibold text-slate-800 dark:text-white">{company}</p>
