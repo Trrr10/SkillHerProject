@@ -15,29 +15,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = React.useState([]);
   const [showConfirm, setShowConfirm] = React.useState(null);
-useEffect(() => {
-  if (!user) return;
-
-  const channel = supabase
-    .channel("course-progress-updates")
-    .on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "course_progress",
-        filter: `user_id=eq.${user.id}`,
-      },
-      () => {
-        fetchEnrolledCourses(); // 🔥 refresh progress
-      }
-    )
-    .subscribe();
-
-  return () => {
-    supabase.removeChannel(channel);
-  };
-}, [user]);
 
   // 🔐 Protect route
   useEffect(() => {
@@ -46,50 +23,28 @@ useEffect(() => {
     }
   }, [user, loading, navigate]);
 useEffect(() => {
-  if (!user) return;
-
-  const fetchEnrolledCourses = async () => {
-    const { data, error } = await supabase
-      .from("course_progress")
-      .select(`
-        course_id,
-        progress,
-        courses ( title )
-      `)
-      .eq("user_id", user.id);
-
-    if (error) {
-      console.error(error);
-      return;
-    }
-
-    const formatted = data.map(item => ({
-      id: item.course_id,
-      title: item.courses.title,
-      progress: item.progress
-    }));
-
-    setEnrolledCourses(formatted);
-  };
-
-  fetchEnrolledCourses();
-}, [user]);
-
-  if (loading) return null;
-const handleUnenroll = async (courseId) => {
-  await supabase
-    .from("course_progress")
-    .delete()
-    .eq("user_id", user.id)
-    .eq("course_id", courseId);
-
-  setEnrolledCourses(prev =>
-    prev.filter(course => course.id !== courseId)
+  const savedCourses = JSON.parse(localStorage.getItem("enrolled_courses") || "[]");
+  
+  // 🧹 AUTO-CLEAN: Remove any duplicates that might have slipped in
+  const uniqueCourses = savedCourses.filter((course, index, self) =>
+    index === self.findIndex((c) => c.id === course.id)
   );
+ 
 
+  setEnrolledCourses(uniqueCourses);
+  
+  // Optional: Sync the cleaned list back to storage
+  if (uniqueCourses.length !== savedCourses.length) {
+    localStorage.setItem("enrolled_courses", JSON.stringify(uniqueCourses));
+  }
+}, []);
+  if (loading) return null;
+const handleUnenroll = (courseId) => {
+  const updated = enrolledCourses.filter(c => c.id !== courseId);
+  setEnrolledCourses(updated);
+  localStorage.setItem("enrolled_courses", JSON.stringify(updated));
   setShowConfirm(null);
 };
-
 
   const name =
     user?.user_metadata?.name ||
@@ -150,7 +105,7 @@ const handleUnenroll = async (courseId) => {
         <nav className="space-y-2 flex-1">
           <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active />
           <NavItem icon={<BookOpen size={20} />} label="My Courses" />
-          <NavItem icon={<Briefcase size={20} />} label="Job Board"  to="/jobs"/>
+          <NavItem icon={<Briefcase size={20} />} label="Job Board" />
           <NavItem icon={<Sparkles size={20} />} label="Services" />
           <NavItem icon={<Settings size={20} />} label="Settings" />
         </nav>
@@ -299,21 +254,14 @@ const handleUnenroll = async (courseId) => {
 
 /* ---------- Components ---------- */
 
-function NavItem({ icon, label, active, to }) {
-  const navigate = useNavigate();
-
+function NavItem({ icon, label, active }) {
   return (
-    <div
-      onClick={() => to && navigate(to)}
-      className={`
-        flex items-center gap-3 p-3 rounded-xl cursor-pointer
-        ${
-          active
-            ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-            : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5"
-        }
-      `}
-    >
+    <div className={`
+      flex items-center gap-3 p-3 rounded-xl cursor-pointer
+      ${active
+        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
+        : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5"}
+    `}>
       {icon}
       <span className="font-semibold text-sm">{label}</span>
     </div>
@@ -392,16 +340,11 @@ function ServiceCard({ title, orders, revenue }) {
 }
 
 function JobItem({ company, type, status }) {
-  const navigate = useNavigate();
-
   return (
-    <div
-      onClick={() => navigate("/jobs")}
-      className="
-        flex justify-between items-center p-3 rounded-xl cursor-pointer
-        hover:bg-purple-50 dark:hover:bg-white/5 transition
-      "
-    >
+    <div className="
+      flex justify-between items-center p-3 rounded-xl
+      hover:bg-purple-50 dark:hover:bg-white/5 transition
+    ">
       <div>
         <p className="font-semibold text-slate-800 dark:text-white">{company}</p>
         <p className="text-xs text-slate-400 uppercase">{type}</p>
