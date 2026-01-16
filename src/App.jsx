@@ -6,7 +6,6 @@ import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar1";
 import LoginModal from "./components/LoginModal";
 import SignupModal from "./components/SignupModal";
-import Footer from "./components/Footer";
 
 // Pages
 import Home1 from "./pages/Home1";
