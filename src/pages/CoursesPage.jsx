@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Search, BookOpen, Clock, Users, Star, ChevronDown, ChevronUp } from "lucide-react";
 import { courses } from "../data/courses";
-import { supabase } from "../supabaseClient";
 
 // FIXED: Defined domains array
 const domains = ["All", "Tech", "Art", "Cooking", "Knitting", "Music"];
@@ -40,62 +39,33 @@ export default function CoursesPage() {
           course.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
-  const toggleExpand = async (courseId) => {
-  const isOpening = expandedCourse !== courseId;
-  setExpandedCourse(isOpening ? courseId : null);
+  const toggleExpand = (courseId) => {
+    setExpandedCourse(expandedCourse === courseId ? null : courseId);
+  };
+  const handleEnroll = (course) => {
+  // 1. Get existing enrollments or empty array
+  const existing = JSON.parse(localStorage.getItem("enrolled_courses") || "[]");
 
-  if (!isOpening) return;
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-
-  // 3️⃣ Get current progress
-  const { data } = await supabase
-    .from("course_progress")
-    .select("progress")
-    .eq("user_id", user.id)
-    .eq("course_id", courseId)
-    .single();
-
-  if (!data) return;
-
-  // 4️⃣ Increase progress
-  await supabase
-    .from("course_progress")
-    .update({
-      progress: Math.min(data.progress + 5, 100)
-    })
-    .eq("user_id", user.id)
-    .eq("course_id", courseId);
-};
-
- const handleEnroll = async (course) => {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return alert("Please log in first");
-
-  // 1️⃣ Check if already enrolled
-  const { data: existing } = await supabase
-    .from("course_progress")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("course_id", course.id)
-    .single();
-
-  if (existing) {
+  // 2. Avoid duplicates
+  if (existing.find((c) => c.id === course.id)) {
     alert("You are already enrolled in this course!");
     return;
   }
 
-  // 2️⃣ Insert initial progress
-  await supabase.from("course_progress").insert({
-    user_id: user.id,
-    course_id: course.id,
-    progress: 10
-  });
+  // 3. Add new course with starting progress
+  const newEnrollment = {
+    id: course.id,
+    title: course.title,
+    progress: 10, // Default starting progress
+    status: "learning"
+  };
 
-  alert(`Enrolled in ${course.title}!`);
+  const updated = [...existing, newEnrollment];
+  localStorage.setItem("enrolled_courses", JSON.stringify(updated));
+    
+  // 4. Feedback for the user
+  alert(`Enrolled in ${course.title}! Check your dashboard.`);
 };
-
 
   return (
     <div className="min-h-screen bg-[#F8F7FF] dark:bg-[#0B0E14] text-slate-900 dark:text-slate-100 p-6">
@@ -293,7 +263,7 @@ export default function CoursesPage() {
                       <BookOpen size={16} />
                       See the Couse in Detail
                     </a>
-            <button
+                    <button
   onClick={() => handleEnroll(course)}
   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-xl hover:shadow-lg transition-all duration-300"
 >

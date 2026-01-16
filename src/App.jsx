@@ -12,20 +12,12 @@ import Home1 from "./pages/Home1";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
-<<<<<<< HEAD
 import Footer from "./components/Footer";
 import StartSelling from "./pages/StartSelling";
 import ExploreProducts from "./pages/ExploreProducts";
-=======
->>>>>>> 35e4fe082a3665e67f6877870efb8f5fcd5162e8
-
 import CreateProfile from "./pages/CreateProfile";
-import StartSelling from "./pages/StartSelling";
-import CoursesPage from "./pages/CoursesPage";  // New full-page courses
-
+import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
-import Footer from "./components/Footer";
-
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -34,7 +26,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E5DEFF] via-[#D6C8FF] to-[#C7B5FF]">
-
       <Navbar
         user={user}
         onLogin={() => setShowLogin(true)}
@@ -75,61 +66,42 @@ function App() {
           path="/"
           element={<Home1 onLogin={() => setShowLogin(true)} />}
         />
+
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+
         <Route
           path="/dashboard"
-          element={user ? <Dashboard /> : <Home1 onLogin={() => setShowLogin(true)} />}
+          element={
+            user ? <Dashboard /> : <Home1 onLogin={() => setShowLogin(true)} />
+          }
         />
 
         <Route
           path="/profile"
           element={
-            user ? (
-              <CreateProfile />
-            ) : (
-              <Home1 onLogin={() => setShowLogin(true)} />
-            )
+            user ? <CreateProfile /> : <Home1 onLogin={() => setShowLogin(true)} />
           }
         />
+
         <Route
           path="/create-profile"
           element={
-            user ? (
-              <CreateProfile />
-            ) : (
-              <Home1 onLogin={() => setShowLogin(true)} />
-            )
+            user ? <CreateProfile /> : <Home1 onLogin={() => setShowLogin(true)} />
           }
         />
-        <Route
-          path="/See-Courses"
-          element={<CoursesPage />}  // Public route for full courses page
-        />
+
+        <Route path="/See-Courses" element={<CoursesPage />} />
+
         <Route
           path="/start-selling"
           element={
-<<<<<<< HEAD
-          user ? (
-          <StartSelling />
-           ) : (
-          <Home1 onLogin={() => setShowLogin(true)} />
-           )  
-       }
-     />
-     <Route path="/explore" element={<ExploreProducts />} />
-
-=======
-            user ? (
-              <StartSelling />
-            ) : (
-              <Home1 onLogin={() => setShowLogin(true)} />
-            )
+            user ? <StartSelling /> : <Home1 onLogin={() => setShowLogin(true)} />
           }
         />
-        <Route path="/jobs" element={<JobsPage />} />
->>>>>>> 35e4fe082a3665e67f6877870efb8f5fcd5162e8
 
+        <Route path="/explore" element={<ExploreProducts />} />
+        <Route path="/jobs" element={<JobsPage />} />
       </Routes>
 
       <Footer />
