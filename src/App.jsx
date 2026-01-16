@@ -2,18 +2,20 @@ import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 
+// Components
 import Navbar from "./components/Navbar1";
 import LoginModal from "./components/LoginModal";
 import SignupModal from "./components/SignupModal";
+import Footer from "./components/Footer";
 
+// Pages
 import Home1 from "./pages/Home1";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
-import Footer from "./components/Footer";
+import CreateProfile from "./pages/CreateProfile";
 import StartSelling from "./pages/StartSelling";
-
-
+import CoursesPage from "./pages/CoursesPage";  // New full-page courses
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -70,16 +72,39 @@ function App() {
           element={user ? <Dashboard /> : <Home1 onLogin={() => setShowLogin(true)} />}
         />
         <Route
+          path="/profile"
+          element={
+            user ? (
+              <CreateProfile />
+            ) : (
+              <Home1 onLogin={() => setShowLogin(true)} />
+            )
+          }
+        />
+        <Route
+          path="/create-profile"
+          element={
+            user ? (
+              <CreateProfile />
+            ) : (
+              <Home1 onLogin={() => setShowLogin(true)} />
+            )
+          }
+        />
+        <Route
+          path="/See-Courses"
+          element={<CoursesPage />}  // Public route for full courses page
+        />
+        <Route
           path="/start-selling"
           element={
-          user ? (
-          <StartSelling />
-           ) : (
-          <Home1 onLogin={() => setShowLogin(true)} />
-           )  
-       }
-     />
-
+            user ? (
+              <StartSelling />
+            ) : (
+              <Home1 onLogin={() => setShowLogin(true)} />
+            )
+          }
+        />
       </Routes>
 
       <Footer />

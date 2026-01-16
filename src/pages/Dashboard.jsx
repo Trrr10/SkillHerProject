@@ -2,16 +2,42 @@ import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-
-import { 
-  LogOut, BookOpen, Briefcase, Sparkles, 
+import { Trash2, AlertCircle } from "lucide-react";
+import {
+  LogOut, BookOpen, Briefcase, Sparkles,
   TrendingUp, ChevronRight,
-  LayoutDashboard, Settings
+  LayoutDashboard, Settings, User
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [enrolledCourses, setEnrolledCourses] = React.useState([]);
+  const [showConfirm, setShowConfirm] = React.useState(null);
+useEffect(() => {
+  if (!user) return;
+
+  const channel = supabase
+    .channel("course-progress-updates")
+    .on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "course_progress",
+        filter: `user_id=eq.${user.id}`,
+      },
+      () => {
+        fetchEnrolledCourses(); // 🔥 refresh progress
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [user]);
 
   // 🔐 Protect route
   useEffect(() => {
@@ -19,8 +45,51 @@ export default function Dashboard() {
       navigate("/");
     }
   }, [user, loading, navigate]);
+useEffect(() => {
+  if (!user) return;
+
+  const fetchEnrolledCourses = async () => {
+    const { data, error } = await supabase
+      .from("course_progress")
+      .select(`
+        course_id,
+        progress,
+        courses ( title )
+      `)
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const formatted = data.map(item => ({
+      id: item.course_id,
+      title: item.courses.title,
+      progress: item.progress
+    }));
+
+    setEnrolledCourses(formatted);
+  };
+
+  fetchEnrolledCourses();
+}, [user]);
 
   if (loading) return null;
+const handleUnenroll = async (courseId) => {
+  await supabase
+    .from("course_progress")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("course_id", courseId);
+
+  setEnrolledCourses(prev =>
+    prev.filter(course => course.id !== courseId)
+  );
+
+  setShowConfirm(null);
+};
+
 
   const name =
     user?.user_metadata?.name ||
@@ -30,6 +99,10 @@ export default function Dashboard() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile"); // Assuming the profile route is "/profile"
   };
 
   return (
@@ -54,6 +127,22 @@ export default function Dashboard() {
         backdrop-blur-xl
         border-r border-purple-200 dark:border-white/10
       ">
+        {/* Profile Section */}
+        <div className="mb-10">
+          <div 
+            className="flex items-center gap-4 p-4 rounded-xl bg-purple-50 dark:bg-purple-500/10 cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-500/20 transition-colors"
+            onClick={handleProfileClick}
+          >
+            <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
+              {name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="font-bold text-slate-900 dark:text-white">{name}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{user.email}</p>
+            </div>
+          </div>
+        </div>
+
         <h1 className="text-2xl font-bold mb-10 bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
           SkillHer ✨
         </h1>
@@ -96,26 +185,85 @@ export default function Dashboard() {
           </p>
         </header>
 
-        {/* Stats */}
+      
+        {/* Stats Section */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          <StatCard title="Courses Enrolled" value="3" icon={<BookOpen />} emoji="📚" />
+          {/* UPDATED: Dynamic Count */}
+          <StatCard 
+            title="Courses Enrolled" 
+            value={enrolledCourses.length.toString()} 
+            icon={<BookOpen />} 
+            emoji="📚" 
+          />
           <StatCard title="Jobs Applied" value="5" icon={<Briefcase />} emoji="💼" />
           <StatCard title="Earnings" value="₹12,700" icon={<TrendingUp />} emoji="💰" />
         </div>
 
         <div className="grid xl:grid-cols-3 gap-8">
-
-          {/* Left */}
           <div className="xl:col-span-2 space-y-8">
-
             <GlassCard title="Continuous Learning" icon={<BookOpen />}>
-              <button className="text-purple-600 text-sm font-bold hover:underline hover:text-purple-700">
+              <button 
+                onClick={() => navigate("/courses")}
+                className="text-purple-600 text-sm font-bold hover:underline hover:text-purple-700"
+              >
                 View All →
               </button>
-              <ProgressItem title="Web Development Basics" progress={70} />
-              <ProgressItem title="UI/UX Masterclass" progress={40} />
-            </GlassCard>
+{/* CONFIRMATION MODAL */}
+      <AnimatePresence>
+        {showConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white dark:bg-[#121826] p-8 rounded-3xl max-w-sm w-full shadow-2xl border border-red-100 dark:border-red-900/30 text-center"
+            >
+              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertCircle size={32} />
+              </div>
+              <h3 className="text-xl font-bold dark:text-white">Are you sure?</h3>
+              <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
+                You will lose all your learning data and progress for this course. This cannot be undone.
+              </p>
+              <div className="flex gap-3 mt-6">
+                <button 
+                  onClick={() => setShowConfirm(null)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => handleUnenroll(showConfirm)}
+                  className="flex-1 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700"
+                >
+                  Unenroll
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+              {/* UPDATED: Dynamic Progress Items */}
+             {enrolledCourses.length > 0 ? (
+  enrolledCourses.map((course) => (
+    <div key={course.id} className="relative group">
+      <ProgressItem title={course.title} progress={course.progress || 0} />
+      <button 
+        onClick={() => setShowConfirm(course.id)}
+        className="absolute -right-2 top-0 p-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
+  ))
+) : (
+  <p className="text-slate-500 text-sm italic py-4">
+    No courses enrolled yet. Head to the Explore section!
+  </p>
+)}
 
+  </GlassCard>
+        
             <GlassCard title="Your Active Services" icon={<Sparkles />}>
               <div className="grid md:grid-cols-2 gap-4">
                 <ServiceCard title="Resume Design" orders={12} revenue="8,500" />
