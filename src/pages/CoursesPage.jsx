@@ -15,14 +15,7 @@ const domainIcons = {
   Knitting: <ExternalLink size={16} />
 };
 
-// In your render:
-{domains.map((d) => (
-  <button key={d} className="...">
-    <span className="flex items-center gap-2">
-      {domainIcons[d]} {d}
-    </span>
-  </button>
-))}
+
 
 export default function CoursesPage() {
   const [activeDomain, setActiveDomain] = useState("All");
@@ -39,35 +32,32 @@ export default function CoursesPage() {
           course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           course.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
-
-  const toggleExpand = async (courseId) => {
-  const isOpening = expandedCourse !== courseId;
-  setExpandedCourse(isOpening ? courseId : null);
-
-  if (!isOpening) return;
-
+const toggleExpand = (courseId) => {
+  setExpandedCourse(prev => (prev === courseId ? null : courseId));
+};
+const handleViewCourse = async (course) => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
-  // 3️⃣ Get current progress
   const { data } = await supabase
     .from("course_progress")
     .select("progress")
     .eq("user_id", user.id)
-    .eq("course_id", courseId)
-    .single();
+    .eq("course_id", course.id)
+      .maybeSingle();
 
   if (!data) return;
 
-  // 4️⃣ Increase progress
   await supabase
     .from("course_progress")
     .update({
       progress: Math.min(data.progress + 5, 100)
     })
     .eq("user_id", user.id)
-    .eq("course_id", courseId);
+    .eq("course_id", course.id);
 };
+
+
 
  const handleEnroll = async (course) => {
   const { data: { user } } = await supabase.auth.getUser();
@@ -284,15 +274,21 @@ export default function CoursesPage() {
                         </>
                       )}
                     </button>
-                    <a
-                      href={course.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-xl hover:shadow-lg transition-all duration-300"
-                    >
-                      <BookOpen size={16} />
-                      See the Couse in Detail
-                    </a>
+ <a
+  href={course.link}
+  target="_blank"
+  rel="noreferrer"
+  onClick={(e) => {
+    e.preventDefault();
+    handleViewCourse(course);
+    window.open(course.link, "_blank");
+  }}
+>
+
+  <BookOpen size={16} />
+  See the Course in Detail
+</a>
+
             <button
   onClick={() => handleEnroll(course)}
   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-xl hover:shadow-lg transition-all duration-300"
