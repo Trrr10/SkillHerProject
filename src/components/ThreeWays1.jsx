@@ -20,6 +20,13 @@ const ThreeWays1 = ({ onLogin }) => {
   } else {
     onLogin();
   }
+}
+    const handleSeeCourses = () => {
+  if (user) {
+    navigate("/See-Courses");
+  } else {
+    onLogin();
+  }
 };
 
   return (
@@ -99,12 +106,12 @@ const ThreeWays1 = ({ onLogin }) => {
           </p>
 
           <button
-            onClick={handleAction}
+            onClick={handleSeeCourses}
             className="w-full py-3 rounded-full font-medium
               bg-purple-600 hover:bg-purple-700
               dark:bg-purple-500 dark:hover:bg-purple-600
               text-white transition-all">
-            Create Profile
+            Check Courses
           </button>
         </div>
 
