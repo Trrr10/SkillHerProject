@@ -6,16 +6,26 @@ import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar1";
 import LoginModal from "./components/LoginModal";
 import SignupModal from "./components/SignupModal";
-import Footer from "./components/Footer";
 
 // Pages
 import Home1 from "./pages/Home1";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
+<<<<<<< HEAD
+import Footer from "./components/Footer";
+import StartSelling from "./pages/StartSelling";
+import ExploreProducts from "./pages/ExploreProducts";
+=======
+>>>>>>> 35e4fe082a3665e67f6877870efb8f5fcd5162e8
+
 import CreateProfile from "./pages/CreateProfile";
 import StartSelling from "./pages/StartSelling";
 import CoursesPage from "./pages/CoursesPage";  // New full-page courses
+
+import JobsPage from "./pages/JobsPage";
+import Footer from "./components/Footer";
+
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -71,6 +81,7 @@ function App() {
           path="/dashboard"
           element={user ? <Dashboard /> : <Home1 onLogin={() => setShowLogin(true)} />}
         />
+
         <Route
           path="/profile"
           element={
@@ -98,6 +109,17 @@ function App() {
         <Route
           path="/start-selling"
           element={
+<<<<<<< HEAD
+          user ? (
+          <StartSelling />
+           ) : (
+          <Home1 onLogin={() => setShowLogin(true)} />
+           )  
+       }
+     />
+     <Route path="/explore" element={<ExploreProducts />} />
+
+=======
             user ? (
               <StartSelling />
             ) : (
@@ -105,6 +127,9 @@ function App() {
             )
           }
         />
+        <Route path="/jobs" element={<JobsPage />} />
+>>>>>>> 35e4fe082a3665e67f6877870efb8f5fcd5162e8
+
       </Routes>
 
       <Footer />
