@@ -9,7 +9,7 @@ import {
   Award,
   Sparkles,
 } from "lucide-react";
-
+import { useLanguage } from "../context/LanguageContext";
 const DynamicDash = () => {
   const [stats, setStats] = useState({
     newUsers: 0,
@@ -17,7 +17,7 @@ const DynamicDash = () => {
     platformRating: 0,
     activeServices: 0,
   });
-
+ const {t}=useLanguage();
   useEffect(() => {
     const finalStats = {
       newUsers: 1247,
@@ -28,7 +28,7 @@ const DynamicDash = () => {
 
     const steps = 60;
     let currentStep = 0;
-
+    
     const timer = setInterval(() => {
       currentStep++;
       const progress = currentStep / steps;
@@ -51,12 +51,13 @@ const DynamicDash = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const statCards = [
-    { title: "Active Women", value: stats.newUsers, icon: Users, color: "purple" },
-    { title: "Jobs Posted", value: stats.jobsPosted, icon: Briefcase, color: "pink" },
-    { title: "Platform Rating", value: stats.platformRating, icon: Star, color: "yellow" },
-    { title: "Active Services", value: stats.activeServices, icon: TrendingUp, color: "emerald" },
-  ];
+const statCards = [
+  { title: "Active Women", key: "dashboard-stat-women", value: stats.newUsers, icon: Users },
+  { title: "Jobs Posted", key: "dashboard-stat-jobs", value: stats.jobsPosted, icon: Briefcase },
+  { title: "Platform Rating", key: "dashboard-stat-rating", value: stats.platformRating, icon: Star },
+  { title: "Active Services", key: "dashboard-stat-services", value: stats.activeServices, icon: TrendingUp },
+];
+
 
   return (
     <section className="relative w-full py-16 overflow-hidden
@@ -76,16 +77,21 @@ const DynamicDash = () => {
             px-4 py-2 rounded-full text-sm mb-4 shadow-sm">
             <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             <span className="font-semibold text-purple-700 dark:text-purple-300">
-              Real-Time Insights
+              {t("Real-Time Insights", "dashboard-badge")}
             </span>
           </div>
 
           <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-            Our Growing Community
+            {t("Our Growing Community", "dashboard-title")}
+
           </h2>
 
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            See how women are thriving on our platform every single day
+           {t(
+  "See how women are thriving on our platform every single day",
+  "dashboard-subtitle"
+)}
+
           </p>
         </div>
 
@@ -123,7 +129,7 @@ const DynamicDash = () => {
 
                   <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs mt-1">
                     <ArrowUpRight size={12} />
-                    Growing fast
+                   {t("Growing fast", "dashboard-growing")}
                   </div>
                 </div>
               </div>
@@ -142,18 +148,24 @@ const DynamicDash = () => {
             <div className="absolute inset-0 bg-black/10"></div>
 
             <div className="relative z-10">
-              <p className="text-purple-100 mb-2">Total Earnings by Women</p>
+              <p className="text-purple-100 mb-2">{t("Total Earnings by Women", "dashboard-earnings-title")}
+</p>
               <h2 className="text-5xl font-bold mb-2">$1.2M</h2>
 
               <div className="flex items-center gap-2 text-purple-100 mb-6">
                 <ArrowUpRight />
-                +34% from last period
+               {t("+34% from last period", "dashboard-growth")}
+
               </div>
 
               <div className="grid grid-cols-3 gap-4">
-                {["$4,850 Avg", "$28.5K Top", "$295K Month"].map((t, i) => (
+                {[
+  { text: "$4,850 Avg", key: "dashboard-avg" },
+  { text: "$28.5K Top", key: "dashboard-top" },
+  { text: "$295K Month", key: "dashboard-month" },
+].map(({ text, key }, i) => (
                   <div key={i} className="bg-white/10 rounded-xl p-4 border border-white/20">
-                    <p className="text-sm font-semibold">{t}</p>
+                    <p className="text-sm font-semibold">{t(text, key)}</p>
                   </div>
                 ))}
               </div>
@@ -169,8 +181,9 @@ const DynamicDash = () => {
                   <Award className="text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Top Category</p>
-                  <p className="font-bold text-gray-900 dark:text-white">Design Services</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t("Top Category", "dashboard-top-category")}</p>
+                  <p className="font-bold text-gray-900 dark:text-white">{t("Design Services", "dashboard-design")}
+</p>
                 </div>
               </div>
             </div>
@@ -182,7 +195,7 @@ const DynamicDash = () => {
                   <Star className="text-pink-600 dark:text-pink-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Success Rate</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t("Success Rate", "dashboard-success-rate")}</p>
                   <p className="font-bold text-gray-900 dark:text-white">94.7%</p>
                 </div>
               </div>

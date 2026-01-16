@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, Quote, Sparkles } from "lucide-react";
-
+import { useLanguage } from "../context/LanguageContext";
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const intervalRef = useRef(null);
-
+  const { t } = useLanguage();
   const testimonials = [
     {
       name: "Priya Sharma",
@@ -90,16 +90,19 @@ const Testimonials = () => {
           <div className="inline-flex items-center gap-2 bg-purple-100 dark:bg-purple-900/40 px-4 py-2 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             <span className="font-semibold text-purple-700 dark:text-purple-300">
-              Success Stories
+             {t("Success Stories", "testimonials-badge")}
             </span>
           </div>
 
           <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-            Women Winning with SkillHer
+           {t("Women Winning with SkillHer", "testimonials-title")}
           </h2>
 
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Real stories from real women building careers on their terms
+           {t(
+   "Real stories from real women building careers on their terms",
+ "testimonials-subtitle"
+ )}
           </p>
         </div>
 
@@ -193,15 +196,15 @@ const Testimonials = () => {
         <div className="grid grid-cols-3 gap-6 mt-16 max-w-3xl mx-auto text-center">
           <div>
             <p className="text-4xl font-bold text-purple-600">1,247</p>
-            <p className="text-gray-600 dark:text-gray-400">Success Stories</p>
+            <p className="text-gray-600 dark:text-gray-400">{t("Success Stories", "testimonials-stat-stories")}</p>
           </div>
           <div>
             <p className="text-4xl font-bold text-pink-600">4.8/5</p>
-            <p className="text-gray-600 dark:text-gray-400">Average Rating</p>
+            <p className="text-gray-600 dark:text-gray-400">{t("Average Rating", "testimonials-stat-rating")}</p>
           </div>
           <div>
             <p className="text-4xl font-bold text-emerald-600">94%</p>
-            <p className="text-gray-600 dark:text-gray-400">Satisfaction</p>
+            <p className="text-gray-600 dark:text-gray-400">{t("Satisfaction", "testimonials-stat-satisfaction")}</p>
           </div>
         </div>
       </div>
