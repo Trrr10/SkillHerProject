@@ -1,3 +1,4 @@
+import { supabase } from "../supabaseClient";
 import "../StartSelling.css";
 import React, { useState } from "react";
 import { UploadCloud, ShieldCheck, Sparkles, Star, CheckCircle2 } from "lucide-react";
@@ -15,11 +16,50 @@ export default function StartSelling() {
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Service submitted:", formData);
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // 1. Get logged-in user
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    alert("You must be logged in to publish a service");
+    return;
+  }
+
+  // 2. Insert into services table
+  const { error } = await supabase.from("services").insert([
+    {
+      user_id: user.id,                    // 🔴 REQUIRED for RLS
+      title: formData.serviceName,          // map correctly
+      description: formData.description,
+      price: Number(formData.price),        // numeric
+      orders_count: 0,                      // optional but safe
+    },
+  ]);
+
+  if (error) {
+    console.error("Insert error:", error);
+    alert(error.message);
+  } else {
     alert("Service published successfully! 🚀");
-  };
+
+    // optional: reset form
+    setFormData({
+      serviceName: "",
+      description: "",
+      price: "",
+      category: "Crafts",
+      deliveryTime: "",
+      experienceLevel: "Beginner",
+    });
+  }
+};
+
+
 
   const inputStyle =
     "mt-1 w-full rounded-xl px-4 py-3 \
