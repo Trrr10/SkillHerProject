@@ -13,9 +13,14 @@ import Home1 from "./pages/Home1";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
+
 import CreateProfile from "./pages/CreateProfile";
 import StartSelling from "./pages/StartSelling";
 import CoursesPage from "./pages/CoursesPage";  // New full-page courses
+
+import JobsPage from "./pages/JobsPage";
+import Footer from "./components/Footer";
+
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -71,6 +76,7 @@ function App() {
           path="/dashboard"
           element={user ? <Dashboard /> : <Home1 onLogin={() => setShowLogin(true)} />}
         />
+
         <Route
           path="/profile"
           element={
@@ -105,6 +111,8 @@ function App() {
             )
           }
         />
+        <Route path="/jobs" element={<JobsPage />} />
+
       </Routes>
 
       <Footer />

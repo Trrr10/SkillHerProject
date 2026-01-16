@@ -150,7 +150,7 @@ const handleUnenroll = async (courseId) => {
         <nav className="space-y-2 flex-1">
           <NavItem icon={<LayoutDashboard size={20} />} label="Dashboard" active />
           <NavItem icon={<BookOpen size={20} />} label="My Courses" />
-          <NavItem icon={<Briefcase size={20} />} label="Job Board" />
+          <NavItem icon={<Briefcase size={20} />} label="Job Board"  to="/jobs"/>
           <NavItem icon={<Sparkles size={20} />} label="Services" />
           <NavItem icon={<Settings size={20} />} label="Settings" />
         </nav>
@@ -299,14 +299,21 @@ const handleUnenroll = async (courseId) => {
 
 /* ---------- Components ---------- */
 
-function NavItem({ icon, label, active }) {
+function NavItem({ icon, label, active, to }) {
+  const navigate = useNavigate();
+
   return (
-    <div className={`
-      flex items-center gap-3 p-3 rounded-xl cursor-pointer
-      ${active
-        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-        : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5"}
-    `}>
+    <div
+      onClick={() => to && navigate(to)}
+      className={`
+        flex items-center gap-3 p-3 rounded-xl cursor-pointer
+        ${
+          active
+            ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
+            : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5"
+        }
+      `}
+    >
       {icon}
       <span className="font-semibold text-sm">{label}</span>
     </div>
@@ -385,11 +392,16 @@ function ServiceCard({ title, orders, revenue }) {
 }
 
 function JobItem({ company, type, status }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="
-      flex justify-between items-center p-3 rounded-xl
-      hover:bg-purple-50 dark:hover:bg-white/5 transition
-    ">
+    <div
+      onClick={() => navigate("/jobs")}
+      className="
+        flex justify-between items-center p-3 rounded-xl cursor-pointer
+        hover:bg-purple-50 dark:hover:bg-white/5 transition
+      "
+    >
       <div>
         <p className="font-semibold text-slate-800 dark:text-white">{company}</p>
         <p className="text-xs text-slate-400 uppercase">{type}</p>
