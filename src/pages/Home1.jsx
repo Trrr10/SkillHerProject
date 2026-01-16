@@ -1,5 +1,6 @@
 import { ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import ThreeWays1 from "../components/ThreeWays1";
 
 import DynamicDash from "../components/DynamicDash";
@@ -127,6 +128,7 @@ function GlowPulse() {
 }
 
 export default function Home1({onLogin }) {
+   const navigate = useNavigate();  
   const [isVisible, setIsVisible] = useState(false);
     
 
@@ -189,6 +191,17 @@ with safety, dignity, and control.
               <span className="relative z-10">Get Started Free</span>
               <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
             </button>
+            <button
+  onClick={() => navigate("/explore")}
+  className="relative px-8 py-4 rounded-xl
+    border border-purple-600
+    text-purple-600 font-semibold
+    hover:bg-purple-50
+    transition-all"
+>
+  Explore Our Products
+</button>
+
 
           </div>
 <div

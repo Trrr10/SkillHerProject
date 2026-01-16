@@ -11,65 +11,81 @@ export default function StartSelling() {
     category: "Crafts",
     deliveryTime: "",
     experienceLevel: "Beginner",
+    image: null,
   });
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  const uploadServiceImage = async (file) => {
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+    const filePath = `public/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("service-images")
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from("service-images")
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    if (!formData.image) {
+      alert("Please upload a service image");
+      return;
+    }
 
-  // 1. Get logged-in user
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      alert("You must be logged in to publish a service");
+      return;
+    }
 
-  if (userError || !user) {
-    alert("You must be logged in to publish a service");
-    return;
-  }
+    try {
+      const imageUrl = await uploadServiceImage(formData.image);
 
-  // 2. Insert into services table
-  const { error } = await supabase.from("services").insert([
-    {
-      user_id: user.id,                    // 🔴 REQUIRED for RLS
-      title: formData.serviceName,          // map correctly
-      description: formData.description,
-      price: Number(formData.price),        // numeric
-      orders_count: 0,                      // optional but safe
-    },
-  ]);
+      const { error } = await supabase.from("services").insert([
+        {
+          user_id: user.id,
+          title: formData.serviceName,
+          description: formData.description,
+          price: Number(formData.price),
+          category: formData.category, // 🔴 Ensure this column exists in DB!
+          orders_count: 0,
+          image_url: imageUrl,
+        },
+      ]);
 
-  if (error) {
-    console.error("Insert error:", error);
-    alert(error.message);
-  } else {
-    alert("Service published successfully! 🚀");
+      if (error) throw error;
+      alert("Service published successfully! 🚀");
 
-    // optional: reset form
-    setFormData({
-      serviceName: "",
-      description: "",
-      price: "",
-      category: "Crafts",
-      deliveryTime: "",
-      experienceLevel: "Beginner",
-    });
-  }
-};
+      setFormData({
+        serviceName: "",
+        description: "",
+        price: "",
+        category: "Crafts",
+        deliveryTime: "",
+        experienceLevel: "Beginner",
+        image: null,
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
 
-
-
-  const inputStyle =
-    "mt-1 w-full rounded-xl px-4 py-3 \
-     text-gray-700 placeholder-gray-400 \
-     transition-all duration-300 focus:outline-none";
+  const inputStyle = "mt-1 w-full rounded-xl px-4 py-3 text-gray-700 placeholder-gray-400 transition-all duration-300 focus:outline-none";
 
   return (
     <div className="relative min-h-screen px-4 py-16 overflow-hidden">
-      
-      {/* Dynamic Background Glows */}
+      {/* Background Glows */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-purple-400/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute top-1/2 -right-32 w-[500px] h-[500px] bg-pink-400/20 rounded-full blur-[120px] animate-pulse" />
@@ -85,7 +101,7 @@ export default function StartSelling() {
           List Your Service
         </h1>
         <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
-          Turn your unique skills into a thriving business. We provide the platform, you provide the magic. 💜
+          Turn your unique skills into a thriving business. 💜
         </p>
       </div>
 
@@ -105,45 +121,22 @@ export default function StartSelling() {
 
       {/* MAIN CONTENT */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
-
+        
         {/* FORM SIDE */}
         <div className="lg:col-span-2 form-container rounded-[2.5rem] p-8 md:p-12">
           <form onSubmit={handleSubmit} className="space-y-8">
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="md:col-span-2">
                 <label className="block text-sm font-bold text-gray-800 ml-1 mb-1">Service Name</label>
-                <input
-                  name="serviceName"
-                  value={formData.serviceName}
-                  onChange={handleChange}
-                  placeholder="Eg: Handmade Soy Candles"
-                  className={inputStyle}
-                  required
-                />
+                <input name="serviceName" value={formData.serviceName} onChange={handleChange} placeholder="Eg: Handmade Soy Candles" className={inputStyle} required />
               </div>
-
               <div>
                 <label className="block text-sm font-bold text-gray-800 ml-1 mb-1">Price (₹)</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="Eg: 999"
-                  className={inputStyle}
-                  required
-                />
+                <input type="number" name="price" value={formData.price} onChange={handleChange} placeholder="Eg: 999" className={inputStyle} required />
               </div>
-
               <div>
                 <label className="block text-sm font-bold text-gray-800 ml-1 mb-1">Category</label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className={inputStyle}
-                >
+                <select name="category" value={formData.category} onChange={handleChange} className={inputStyle}>
                   <option>Crafts</option>
                   <option>Beauty</option>
                   <option>Education</option>
@@ -155,70 +148,46 @@ export default function StartSelling() {
 
             <div>
               <label className="block text-sm font-bold text-gray-800 ml-1 mb-1">Description</label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows="5"
-                placeholder="What makes your service special? Share your story..."
-                className={inputStyle}
-                required
-              />
-              <p className="text-xs text-gray-400 mt-2 ml-1 italic">
-                💡 Clear descriptions increase buyer trust by up to 80%
-              </p>
+              <textarea name="description" value={formData.description} onChange={handleChange} rows="5" placeholder="What makes your service special?" className={inputStyle} required />
             </div>
 
-            {/* Upload Section */}
-            <div className="upload-box group p-12 text-center">
-              <UploadCloud className="mx-auto mb-4 h-12 w-12 transition-transform group-hover:scale-110 duration-300" />
-              <p className="font-bold text-lg">Upload product images</p>
+            {/* UPLOAD BOX (Styled like Code A, Functional like Code B) */}
+            <div className="upload-box group p-12 text-center relative border-2 border-dashed border-purple-100 rounded-3xl cursor-pointer">
+              <UploadCloud className="mx-auto mb-4 h-12 w-12 text-purple-400 group-hover:scale-110 duration-300" />
+              <p className="font-bold text-lg">{formData.image ? formData.image.name : "Upload product images"}</p>
               <p className="text-sm opacity-60">Drag and drop or click to browse</p>
-              <span className="inline-block mt-3 px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-[10px] font-bold uppercase tracking-widest">Coming Soon</span>
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="absolute inset-0 opacity-0 cursor-pointer" 
+                onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+              />
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="publish-btn w-full py-4 rounded-2xl text-white font-bold text-xl shadow-2xl transition-all duration-300"
-            >
+            <button type="submit" className="publish-btn w-full py-4 rounded-2xl text-white font-bold text-xl shadow-2xl transition-all duration-300">
               Publish Listing 🚀
             </button>
           </form>
         </div>
 
-        {/* INFO SIDEBAR */}
+        {/* INFO SIDEBAR (Guidelines and Motivation Restored) */}
         <div className="space-y-8">
-          {/* Example Preview */}
           <div className="info-card p-6 border-t-4 border-t-purple-500">
             <h3 className="font-black text-gray-800 text-xl mb-4">Live Preview</h3>
             <div className="example-card p-5 rounded-2xl">
-              <div className="w-full h-32 bg-gray-100 rounded-xl mb-4 flex items-center justify-center text-gray-400">
-                Image Preview
+              <div className="w-full h-32 bg-gray-100 rounded-xl mb-4 flex items-center justify-center text-gray-400 overflow-hidden">
+                {formData.image ? <img src={URL.createObjectURL(formData.image)} className="w-full h-full object-cover" /> : "Image Preview"}
               </div>
               <p className="font-bold text-purple-700">{formData.serviceName || "Your Service Name"}</p>
-              <p className="text-sm font-medium text-gray-500">
-                ₹{formData.price || "0"} · {formData.category}
-              </p>
-              <div className="flex items-center gap-1 text-yellow-500 mt-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} fill={i < 4 ? "currentColor" : "none"} />
-                ))}
-                <span className="text-xs text-gray-400 ml-1">(New Listing)</span>
-              </div>
+              <p className="text-sm font-medium text-gray-500">₹{formData.price || "0"} · {formData.category}</p>
             </div>
           </div>
 
-          {/* Guidelines */}
+          {/* Guidelines Restored */}
           <div className="info-card p-6">
             <h3 className="font-black text-purple-700 text-lg mb-4">Listing Guidelines</h3>
             <ul className="space-y-4">
-              {[
-                "Use high-quality bright photos",
-                "Be specific about delivery times",
-                "Mention if items are customizable",
-                "Keep pricing transparent"
-              ].map((tip, i) => (
+              {["Use high-quality bright photos", "Be specific about delivery times", "Mention if items are customizable", "Keep pricing transparent"].map((tip, i) => (
                 <li key={i} className="flex gap-3 text-sm text-gray-600 font-medium">
                   <div className="h-5 w-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">✓</div>
                   {tip}
@@ -227,8 +196,8 @@ export default function StartSelling() {
             </ul>
           </div>
 
-          {/* Motivation Card */}
-          <div className="motivation-card p-8 rounded-[2rem] text-center floating">
+          {/* Motivation Card Restored */}
+          <div className="motivation-card p-8 rounded-[2rem] text-center floating bg-gradient-to-br from-purple-500 to-pink-500 text-white">
             <Sparkles className="mx-auto mb-4 h-8 w-8 text-white/80" />
             <h4 className="text-2xl font-bold mb-2">Ready to Shine?</h4>
             <p className="text-sm leading-relaxed text-white/90">

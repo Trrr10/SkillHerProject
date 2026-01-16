@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import StartSelling from "./pages/StartSelling";
+import ExploreProducts from "./pages/ExploreProducts";
 
 
 
@@ -79,6 +80,8 @@ function App() {
            )  
        }
      />
+     <Route path="/explore" element={<ExploreProducts />} />
+
 
       </Routes>
 
