@@ -5,6 +5,9 @@ import ThreeWays1 from "../components/ThreeWays1";
 
 import DynamicDash from "../components/DynamicDash";
 import Testimonials from "../components/Testimonials";
+import { useLanguage } from "../context/LanguageContext";
+
+
 function FloatingOrbs() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -128,6 +131,7 @@ function GlowPulse() {
 }
 
 export default function Home1({onLogin }) {
+  const { t } = useLanguage();
    const navigate = useNavigate();  
   const [isVisible, setIsVisible] = useState(false);
     
@@ -162,7 +166,7 @@ export default function Home1({onLogin }) {
           <h1 className={`text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white
           leading-tight transition-all 
             ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            Grow with Confidence
+            {t("Grow with Confidence","home-title")}
             <br />
            <span
   className="
@@ -175,20 +179,19 @@ export default function Home1({onLogin }) {
     inline-block
   "
 >
-  Start Earning Today.
+  {t("Start Earning Today.","home-subtitle")}
 </span>
 
           </h1>
 
           <p className={`max-w-2xl text-gray-600 mt-6 text-lg transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            Built for women who want to work on their own terms —
-with safety, dignity, and control.
+           {t("Built for women who want to work on their own terms —with safety, dignity, and control.","home-description")}
           </p>
 
           <div className={`flex gap-4 mt-10 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <button className="group relative bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl flex items-center gap-2 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10">Get Started Free</span>
+              <span className="relative z-10">{t("Get Started Free","home-cta-primary")}</span>
               <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
@@ -199,7 +202,7 @@ with safety, dignity, and control.
     hover:bg-purple-50
     transition-all"
 >
-  Explore Our Products
+  {t("Explore Our Products","home-cta-secondary")}
 </button>
 
 
@@ -210,25 +213,26 @@ with safety, dignity, and control.
     transition-all duration-1000 delay-800
     ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
   `}
->
-     {["Verified Employers", "Secure Payments", "24/7 Safety Support"].map(
-              (text, i) => (
-                <span
-                  key={i}
-                  className="
-                  flex items-center gap-2 px-5 py-2.5 rounded-full
-                  bg-white/90 dark:bg-gray-800/80
-                  text-gray-800 dark:text-gray-200
-                  border border-purple-100 dark:border-gray-700
-                  shadow-md backdrop-blur-md
-                  hover:scale-110 transition
-                "
-                >
-                  <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                  <span className="font-semibold">{text}</span>
-                </span>
-              )
-            )}
+> {[
+  { text: "Verified Employers", key: "home-feature-1" },
+  { text: "Secure Payments", key: "home-feature-2" },
+  { text: "24/7 Safety Support", key: "home-feature-3" },
+].map(({ text, key }, i) => (
+  <span
+    key={i}
+    className="
+      flex items-center gap-2 px-5 py-2.5 rounded-full
+      bg-white/90 dark:bg-gray-800/80
+      text-gray-800 dark:text-gray-200
+      border border-purple-100 dark:border-gray-700
+      shadow-md backdrop-blur-md
+      hover:scale-110 transition
+    "
+  >
+    <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+    <span className="font-semibold">{t(text, key)}</span>
+  </span>
+))}
             
           </div>
         </div>

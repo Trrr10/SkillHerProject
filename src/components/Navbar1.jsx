@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
-import { Sparkles, ChevronRight, LogOut } from "lucide-react";
+import { Sparkles, ChevronRight, LogOut, Globe } from "lucide-react";
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from '../context/LanguageContext';
+import { languages } from "../utils/languages";
 
 export default function Navbar({ user, onLogin, onSignup, onLogout }) {
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
 
   return (
     <nav
@@ -36,21 +39,21 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
               SkillHer
             </h1>
             <p className="text-sm font-semibold text-orange-500">
-              Empower. Earn. Thrive.
+              {t('Empower. Earn. Thrive.', 'nav-tagline')}
             </p>
           </div>
         </Link>
 
-   {/* Navigation Links - Enhanced */}
+        {/* Navigation Links */}
         <div className="flex gap-10 items-center">
-         {[
-            { to: "/", label: "Home" },
-            { to: "/about", label: "About" },
-            { to: "/learnings", label: "Learnings" },
-            { to: "/contact", label: "Contact" },
-          ].map(({ to, label }) => (
+          {[
+            { to: "/", label: "Home", key: "nav-home" },
+            { to: "/about", label: "About", key: "nav-about" },
+            { to: "/funding", label: "Funding", key: "nav-funding" },
+            { to: "/contact", label: "Contact", key: "nav-contact" },
+          ].map(({ to, label, key }) => (
             <Link
-              key={label}
+              key={to}
               to={to}
               className="
                 relative font-semibold text-2xl tracking-wide
@@ -59,49 +62,94 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
                 transition-all duration-300 group
               "
             >
-              {label}
+              {t(label, key)}
 
-              {/* Dot indicator */}
               <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition"></span>
-
-              {/* Underline */}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300 rounded-full"></span>
             </Link>
           ))}
+
+          {/* Language Selector */}
+          <div className="relative group">
+            <button 
+              className="
+                p-2 rounded-full
+                bg-white dark:bg-gray-800
+                border border-gray-300 dark:border-gray-600
+                hover:scale-110 transition
+              "
+              aria-label="Select Language"
+            >
+              <Globe className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            </button>
+            
+            <div className="
+              absolute right-0 mt-2 w-56
+              bg-white dark:bg-gray-800
+              rounded-lg shadow-2xl
+              border border-gray-200 dark:border-gray-700
+              opacity-0 invisible
+              group-hover:opacity-100 group-hover:visible
+              transition-all duration-200
+              max-h-96 overflow-y-auto
+              z-50
+            ">
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={`
+                    w-full text-left px-4 py-3
+                    hover:bg-purple-50 dark:hover:bg-gray-700
+                    transition-colors duration-150
+                    flex items-center gap-3
+                    ${language === lang.code 
+                      ? 'bg-purple-100 dark:bg-gray-600 font-bold text-purple-700 dark:text-purple-300' 
+                      : 'text-gray-700 dark:text-gray-200'
+                    }
+                  `}
+                >
+                  <span className="text-2xl">{lang.flag}</span>
+                  <span className="text-sm">{lang.name}</span>
+                  {language === lang.code && (
+                    <span className="ml-auto text-purple-600">✓</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Theme Toggle */}
           <button
-  onClick={toggleTheme}
-  className="
-    p-2 rounded-full
-    bg-white dark:bg-gray-800
-    border border-gray-300 dark:border-gray-600
-    hover:scale-110 transition
-  "
-  aria-label="Toggle Theme"
->
-  {theme === "light" ? (
-    <Moon className="w-5 h-5 text-gray-800" />
-  ) : (
-    <Sun className="w-5 h-5 text-yellow-400" />
-  )}
-</button>
+            onClick={toggleTheme}
+            className="
+              p-2 rounded-full
+              bg-white dark:bg-gray-800
+              border border-gray-300 dark:border-gray-600
+              hover:scale-110 transition
+            "
+            aria-label="Toggle Theme"
+          >
+            {theme === "light" ? (
+              <Moon className="w-5 h-5 text-gray-800" />
+            ) : (
+              <Sun className="w-5 h-5 text-yellow-400" />
+            )}
+          </button>
 
-
-
-          {/* 🔐 AUTH SECTION */}
+          {/* AUTH SECTION */}
           {!user ? (
             <>
-              {/* Login */}
               <button
                 onClick={onLogin}
                 className="group px-6 py-3 bg-gradient-to-r from-teal-400 to-cyan-400 text-white font-bold rounded-full shadow-lg hover:scale-105 transition"
               >
                 <span className="flex items-center gap-2">
-                  Log In
+                  {t('Log In', 'nav-login')}
                   <ChevronRight size={16} />
                 </span>
               </button>
 
-              {/* Signup */}
               <button
                 onClick={onSignup}
                 className="group px-6 py-3 rounded-xl font-bold text-white shadow-xl hover:scale-105 transition"
@@ -111,20 +159,18 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
               >
                 <span className="flex items-center gap-2">
                   <Sparkles size={16} />
-                  Sign Up
+                  {t('Sign Up', 'nav-signup')}
                   <Sparkles size={16} />
                 </span>
               </button>
             </>
           ) : (
             <>
-              {/* Logged-in View */}
               <span className="text-lg font-semibold text-purple-600 dark:text-purple-400">
                 Hi, {user.name} 👋
               </span>
 
-
-               <button
+              <button
                 onClick={onLogout}
                 className="
                   flex items-center gap-2
@@ -134,7 +180,7 @@ export default function Navbar({ user, onLogin, onSignup, onLogout }) {
                 "
               >
                 <LogOut size={18} />
-                Logout
+                {t('Logout', 'nav-logout')}
               </button>
             </>
           )}

@@ -12,12 +12,24 @@ import Home1 from "./pages/Home1";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
+
+
+import Funding from "./pages/Funding";
+
+
 import Footer from "./components/Footer";
-import StartSelling from "./pages/StartSelling";
 import ExploreProducts from "./pages/ExploreProducts";
+
 import CreateProfile from "./pages/CreateProfile";
 import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
+
+import StartSelling from "./pages/StartSelling";
+import CreateProfile from "./pages/CreateProfile";
+import CoursesPage from "./pages/CoursesPage";
+import JobsPage from "./pages/JobsPage";
+
+
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -76,7 +88,7 @@ function App() {
             user ? <Dashboard /> : <Home1 onLogin={() => setShowLogin(true)} />
           }
         />
-
+          <Route path="/funding" element={<Funding />} />
         <Route
           path="/profile"
           element={
@@ -99,6 +111,12 @@ function App() {
             user ? <StartSelling /> : <Home1 onLogin={() => setShowLogin(true)} />
           }
         />
+
+     <Route path="/explore" element={<ExploreProducts />} />
+
+        
+        <Route path="/jobs" element={<JobsPage />} />
+
 
         <Route path="/explore" element={<ExploreProducts />} />
         <Route path="/jobs" element={<JobsPage />} />

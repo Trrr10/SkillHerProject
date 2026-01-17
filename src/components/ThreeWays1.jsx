@@ -2,11 +2,12 @@ import React from "react";
 import { FileText, ShoppingBag, Briefcase, ArrowRight, Sparkles, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 
 const ThreeWays1 = ({ onLogin }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-
+  const { t } = useLanguage();
   const handleAction = () => {
     if (user) {
       navigate("/dashboard");
@@ -55,15 +56,18 @@ const ThreeWays1 = ({ onLogin }) => {
       <span className="inline-block px-4 py-1 rounded-full text-sm font-medium
         bg-purple-100 text-purple-700
         dark:bg-purple-900/40 dark:text-purple-300 mb-4">
-        Choose Your Path
+        {t("Choose Your Path", "threeways-badge")}
       </span>
 
       <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-        Three Ways to Start Earning
+       {t("Three Ways to Start Earning", "threeways-title")}
       </h2>
 
       <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-        No learning required. No waiting. Choose your path and begin immediately.
+        {t(
+  "No learning required. No waiting. Choose your path and begin immediately.",
+  "threeways-subtitle"
+)}
       </p>
     </div>
 
@@ -93,16 +97,21 @@ const ThreeWays1 = ({ onLogin }) => {
             bg-purple-50 dark:bg-purple-900/30 rounded-full mb-3 text-xs font-semibold
             text-purple-700 dark:text-purple-300">
             <Star className="w-3 h-3 fill-current" />
-            Most Popular
+            {t("Most Popular", "threeways-card1-badge")}
+
           </span>
 
           <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
-            Show Your Skills
+           {t("Show Your Skills", "threeways-card1-title")}
+
           </h3>
 
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Upload your resume, add skill tags, build your portfolio.
-            No tests, no certifications—just you.
+            {t(
+  "Upload your resume, add skill tags, build your portfolio. No tests, no certifications—just you.",
+  "threeways-card1-desc"
+)}
+
           </p>
 
           <button
@@ -111,7 +120,7 @@ const ThreeWays1 = ({ onLogin }) => {
               bg-purple-600 hover:bg-purple-700
               dark:bg-purple-500 dark:hover:bg-purple-600
               text-white transition-all">
-            Check Courses
+            {t("Check Courses", "threeways-card1-btn")}
           </button>
         </div>
 
@@ -140,16 +149,20 @@ const ThreeWays1 = ({ onLogin }) => {
             bg-pink-50 dark:bg-pink-900/30 rounded-full mb-3 text-xs font-semibold
             text-pink-700 dark:text-pink-300">
             <Sparkles className="w-3 h-3" />
-            Quick Start
+            {t("Quick Start", "threeways-card2-badge")}
           </span>
 
           <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
-            Start Selling
+            {t("Start Selling", "threeways-card2-title")}
+
           </h3>
 
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            List your services or digital products.
-            Set your own price. Suggestions help—never block.
+            {t(
+  "List your services or digital products. Set your own price. Suggestions help—never block.",
+  "threeways-card2-desc"
+)}
+
           </p>
 
           <button
@@ -158,7 +171,7 @@ const ThreeWays1 = ({ onLogin }) => {
               bg-pink-600 hover:bg-pink-700
               dark:bg-pink-500 dark:hover:bg-pink-600
               text-white transition-all">
-            List a Service
+           {t("List a Service", "threeways-card2-btn")}
           </button>
         </div>
       </div>
@@ -186,16 +199,20 @@ const ThreeWays1 = ({ onLogin }) => {
             bg-emerald-50 dark:bg-emerald-900/30 rounded-full mb-3 text-xs font-semibold
             text-emerald-700 dark:text-emerald-300">
             <Star className="w-3 h-3 fill-current" />
-            Verified
+            {t("Verified", "threeways-card3-badge")}
+
           </span>
 
           <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
-            Find Jobs
+           {t("Find Jobs", "threeways-card3-title")}
           </h3>
 
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Browse verified opportunities.
-            Remote, part-time, flexible. Apply with your profile.
+            {t(
+  "Browse verified opportunities. Remote, part-time, flexible. Apply with your profile.",
+  "threeways-card3-desc"
+)}
+
           </p>
 
           <button
@@ -204,7 +221,8 @@ const ThreeWays1 = ({ onLogin }) => {
               bg-emerald-600 hover:bg-emerald-700
               dark:bg-emerald-500 dark:hover:bg-emerald-600
               text-white transition-all">
-            Browse Jobs
+           {t("Browse Jobs", "threeways-card3-btn")}
+
           </button>
         </div>
       </div>
@@ -221,16 +239,17 @@ const ThreeWays1 = ({ onLogin }) => {
 
           <p className="text-gray-700 dark:text-gray-300 mb-3 font-medium">
             <span className="font-bold text-purple-700 dark:text-purple-400">
-              Not sure where to start?
+              {t("Not sure where to start?", "threeways-help-title")}
             </span>{" "}
-            We'll guide you through each step.
+           {t("We'll guide you through each step.", "threeways-help-desc")}
+
           </p>
 
           <button className="inline-flex items-center gap-2 px-8 py-3
             bg-purple-600 hover:bg-purple-700
             dark:bg-purple-500 dark:hover:bg-purple-600
             text-white font-bold rounded-full transition-all">
-            Get Personalized Help
+           {t("Get Personalized Help", "threeways-help-btn")}
             <Sparkles className="w-4 h-4" />
           </button>
         </div>
