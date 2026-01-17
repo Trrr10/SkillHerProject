@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
-
+import Community from "./pages/Community";
 // Components
 import Navbar from "./components/Navbar1";
 import LoginModal from "./components/LoginModal";
@@ -114,9 +114,8 @@ function App() {
         
         <Route path="/jobs" element={<JobsPage />} />
 
-
-        <Route path="/explore" element={<ExploreProducts />} />
-        <Route path="/jobs" element={<JobsPage />} />
+<Route path="/community" element={<Community />} />
+        
       </Routes>
 
       <Footer />

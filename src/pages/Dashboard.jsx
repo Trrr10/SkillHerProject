@@ -6,7 +6,7 @@ import { Trash2, AlertCircle } from "lucide-react";
 import {
   LogOut, BookOpen, Briefcase, Sparkles,
   TrendingUp, ChevronRight,
-  LayoutDashboard, Settings, User
+  LayoutDashboard, Settings, User, Users,MessageCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -132,11 +132,11 @@ export default function Dashboard() {
             label="Services"
             onClick={() => navigate("/services")}
           />
-          <NavItem 
-            icon={<Settings size={20} />} 
-            label="Settings"
-            onClick={() => navigate("/settings")}
-          />
+         <NavItem 
+  icon={<MessageCircle size={20} />} 
+  label="Community"
+  onClick={() => navigate("/community")}
+/>
         </nav>
 
         <button
