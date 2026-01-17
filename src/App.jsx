@@ -25,9 +25,7 @@ import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
 
 import StartSelling from "./pages/StartSelling";
-import CreateProfile from "./pages/CreateProfile";
-import CoursesPage from "./pages/CoursesPage";
-import JobsPage from "./pages/JobsPage";
+
 
 
 
