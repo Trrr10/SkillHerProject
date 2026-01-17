@@ -25,7 +25,10 @@ import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
 
 import StartSelling from "./pages/StartSelling";
+<<<<<<< HEAD
 
+=======
+>>>>>>> 179244298aa7f12e94dacbe941b2abdf41532145
 
 
 
