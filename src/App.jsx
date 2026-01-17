@@ -13,14 +13,22 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 
+
 import Funding from "./pages/Funding";
+
 
 import Footer from "./components/Footer";
 import ExploreProducts from "./pages/ExploreProducts";
+
+import CreateProfile from "./pages/CreateProfile";
+import CoursesPage from "./pages/CoursesPage";
+import JobsPage from "./pages/JobsPage";
+
 import StartSelling from "./pages/StartSelling";
 import CreateProfile from "./pages/CreateProfile";
 import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
+
 
 
 function App() {
@@ -103,11 +111,15 @@ function App() {
             user ? <StartSelling /> : <Home1 onLogin={() => setShowLogin(true)} />
           }
         />
+
      <Route path="/explore" element={<ExploreProducts />} />
 
         
         <Route path="/jobs" element={<JobsPage />} />
 
+
+        <Route path="/explore" element={<ExploreProducts />} />
+        <Route path="/jobs" element={<JobsPage />} />
       </Routes>
 
       <Footer />
