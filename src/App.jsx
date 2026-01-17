@@ -15,7 +15,7 @@ import Dashboard from "./pages/Dashboard";
 
 
 import Funding from "./pages/Funding";
-
+import CertificatesPage from "./pages/CertificatesPage";
 
 import Footer from "./components/Footer";
 import ExploreProducts from "./pages/ExploreProducts";
@@ -27,6 +27,7 @@ import JobsPage from "./pages/JobsPage";
 import StartSelling from "./pages/StartSelling";
 
 
+import AffirmationPopup from "./components/AffirmationPopup";
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -35,13 +36,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E5DEFF] via-[#D6C8FF] to-[#C7B5FF]">
+      
       <Navbar
         user={user}
         onLogin={() => setShowLogin(true)}
         onSignup={() => setShowSignup(true)}
         onLogout={logout}
       />
-
+<AffirmationPopup />
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}
@@ -111,12 +113,13 @@ function App() {
 
      <Route path="/explore" element={<ExploreProducts />} />
 
-        
+        <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/jobs" element={<JobsPage />} />
 
 <Route path="/community" element={<Community />} />
         
       </Routes>
+
 
       <Footer />
     </div>

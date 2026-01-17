@@ -317,15 +317,13 @@ const displayedSkills =
     : allSkills.filter(skill => skill.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#E5DEFF] via-[#D6C8FF] to-[#C7B5FF]">
+    <div className="min-h-screen bg-[#F8F7FF] dark:bg-[#0B0E14] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-100 via-pink-50 to-white dark:from-purple-900/20 dark:via-fuchsia-900/10 dark:to-[#0B0E14]">
       
       {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-64 h-64 bg-purple-700 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-float"></div>
-        <div className="absolute top-20 right-20 w-72 h-72 bg-pink-600 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-float-slow"></div>
-        <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-float-slower"></div>
-        <div className="absolute top-1/3 right-1/4 w-56 h-56 bg-pink-200 rounded-full mix-blend-multiply filter blur-2xl opacity-35 animate-float-reverse"></div>
-      </div>
+     <div className="absolute inset-0 overflow-hidden pointer-events-none">
+  <div className="absolute top-20 left-20 w-96 h-96 rounded-full blur-3xl bg-purple-400/20 dark:bg-purple-700/20 animate-float"></div>
+  <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full blur-3xl bg-pink-400/20 dark:bg-pink-700/20 animate-float-slow"></div>
+</div>
 
       {/* HEADER */}
       <div className="relative z-10">
@@ -335,12 +333,12 @@ const displayedSkills =
               <Briefcase className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-5xl md:text-5xl font-bold text-gray-900 mb-2">
-                Discover Your Next Opportunity
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl">
-                Browse professional jobs or explore skill-based work opportunities. Choose what fits your lifestyle best.
-              </p>
+              <h1 className="text-5xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2">
+  Discover Your Next Opportunity
+</h1>
+<p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
+  Browse professional jobs or explore skill-based work opportunities. Choose what fits your lifestyle best.
+</p>
             </div>
           </div>
         </div>
@@ -352,11 +350,11 @@ const displayedSkills =
         <div className="mb-12 flex gap-4">
           <button
             onClick={() => setViewMode("professional")}
-            className={`flex-1 py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 ${
-              viewMode === "professional"
-                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/30 scale-105"
-                : "bg-white/60 text-gray-700 border-2 border-gray-200 hover:border-purple-300"
-            }`}
+           className={`flex-1 py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 ${
+  viewMode === "professional"
+    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/30 scale-105"
+    : "bg-white/80 dark:bg-white/5 text-slate-700 dark:text-slate-300 border-2 border-slate-200 dark:border-white/10 hover:border-purple-300"
+}`}
           >
             <div className="flex items-center justify-center gap-3">
               <Briefcase className="w-6 h-6" />
@@ -370,10 +368,10 @@ const displayedSkills =
           <button
             onClick={() => setViewMode("skill-based")}
             className={`flex-1 py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 ${
-              viewMode === "skill-based"
-                ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xl shadow-orange-500/30 scale-105"
-                : "bg-white/60 text-gray-700 border-2 border-gray-200 hover:border-orange-300"
-            }`}
+  viewMode === "skill-based"
+    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xl shadow-orange-500/30 scale-105"
+    : "bg-white/80 dark:bg-white/5 text-slate-700 dark:text-slate-300 border-2 border-slate-200 dark:border-white/10 hover:border-orange-300"
+}`}
           >
             <div className="flex items-center justify-center gap-3">
               <Home className="w-6 h-6" />
@@ -536,7 +534,7 @@ const displayedSkills =
                     </div>
                     
                     {/* Job Title & Company */}
-                    <h3 className="font-bold text-gray-900 text-lg mb-1 group-hover:text-purple-600 transition-colors">
+                    <h3 className="font-bold text-gray-900 text-lg mb-1 group-hover:text-black transition-colors">
                       {job.title}
                     </h3>
                     <p className="text-sm text-gray-600 font-medium mb-3">{job.company}</p>

@@ -158,14 +158,14 @@ const translations = {
   "threeways-help-btn": "व्यक्तिगत सहायता प्राप्त करें",
 
   /* Testimonials */
-"testimonials-badge": "Success Stories",
-"testimonials-title": "Women Winning with SkillHer",
-"testimonials-subtitle":
-  "Real stories from real women building careers on their terms",
+// "testimonials-badge": "Success Stories",
+// "testimonials-title": "Women Winning with SkillHer",
+// "testimonials-subtitle":
+//   "Real stories from real women building careers on their terms",
 
-"testimonials-stat-stories": "Success Stories",
-"testimonials-stat-rating": "Average Rating",
-"testimonials-stat-satisfaction": "Satisfaction",
+// "testimonials-stat-stories": "Success Stories",
+// "testimonials-stat-rating": "Average Rating",
+// "testimonials-stat-satisfaction": "Satisfaction",
 
 /* Testimonials */
 "testimonials-badge": "सफलता की कहानियाँ",
