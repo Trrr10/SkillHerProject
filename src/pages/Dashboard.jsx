@@ -9,7 +9,7 @@ import {
   MoreVertical, ExternalLink, ShieldCheck, Heart
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { generateCertificate } from "../utils/certificateGenerator";
+import { generateCertificate } from "../utils/CertificateGenerator";
 
 /**
  * DASHBOARD COMPONENT

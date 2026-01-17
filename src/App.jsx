@@ -25,12 +25,9 @@ import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
 
 import StartSelling from "./pages/StartSelling";
-<<<<<<< HEAD
-
-=======
->>>>>>> 179244298aa7f12e94dacbe941b2abdf41532145
 
 
+import AffirmationPopup from "./components/AffirmationPopup";
 
 function App() {
   const { user, login, logout } = useAuth();
@@ -39,13 +36,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E5DEFF] via-[#D6C8FF] to-[#C7B5FF]">
+      
       <Navbar
         user={user}
         onLogin={() => setShowLogin(true)}
         onSignup={() => setShowSignup(true)}
         onLogout={logout}
       />
-
+<AffirmationPopup />
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}
@@ -122,6 +120,7 @@ function App() {
         <Route path="/explore" element={<ExploreProducts />} />
         <Route path="/jobs" element={<JobsPage />} />
       </Routes>
+
 
       <Footer />
     </div>
