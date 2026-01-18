@@ -115,7 +115,7 @@ const ThreeWays1 = ({ onLogin }) => {
           </p>
 
           <button
-            onClick={handleSeeCourses}
+            onClick={handleAction}
             className="w-full py-3 rounded-full font-medium
               bg-purple-600 hover:bg-purple-700
               dark:bg-purple-500 dark:hover:bg-purple-600
@@ -166,7 +166,7 @@ const ThreeWays1 = ({ onLogin }) => {
           </p>
 
           <button
-            onClick={handleListService}
+            onClick={handleAction}
             className="w-full py-3 rounded-full font-medium
               bg-pink-600 hover:bg-pink-700
               dark:bg-pink-500 dark:hover:bg-pink-600
