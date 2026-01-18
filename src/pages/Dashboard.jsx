@@ -8,8 +8,8 @@ import {
   Trash2, AlertCircle, LogOut, BookOpen, Briefcase, Sparkles,
   TrendingUp, ChevronRight, LayoutDashboard, Settings, User,
   Bell, Calendar, MessageSquare, Award, Clock, Filter,
-  MoreVertical, ExternalLink, ShieldCheck, Heart
-
+  MoreVertical, ExternalLink, ShieldCheck, Heart, MapPin, 
+  Github, Linkedin, Globe, Mail, Edit3, CheckCircle2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { generateCertificate } from "../utils/CertificateGenerator";
@@ -18,9 +18,9 @@ import { generateCertificate } from "../utils/CertificateGenerator";
  * DASHBOARD COMPONENT
  * Total feature set: 
  * - Real-time enrollment syncing
+ * - Profile Preview from Supabase
  * - Multi-stage unenrollment confirmation
  * - Dynamic stat calculations
- * - Interactive sidebar with profile previews
  * - Advanced glassmorphism UI
  */
 export default function Dashboard() {
@@ -29,12 +29,34 @@ export default function Dashboard() {
   
   // -- STATE MANAGEMENT --
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [profileData, setProfileData] = useState(null);
   const [showConfirm, setShowConfirm] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState(3);
   const [fetchLoading, setFetchLoading] = useState(true);
 
   // -- DATA FETCHING LOGIC --
+
+  // 1. Fetch Profile Data
+  const fetchProfile = useCallback(async () => {
+    try {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (!currentUser) return;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") throw error;
+      if (data) setProfileData(data);
+    } catch (err) {
+      console.error("Error fetching profile:", err.message);
+    }
+  }, []);
+
+  // 2. Fetch Enrollments
   const fetchEnrollments = useCallback(async () => {
     try {
       setFetchLoading(true);
@@ -59,12 +81,6 @@ export default function Dashboard() {
           date: new Date(item.created_at).toLocaleDateString()
         })));
       }
-      data.forEach(course => {
-      if (course.progress === 100) {
-        // You can trigger a visual toast/notification here
-        console.log(`Certificate available for: ${course.course_title}`);
-      }
-    });
     } catch (err) {
       console.error("Error fetching enrollments:", err.message);
     } finally {
@@ -77,15 +93,16 @@ export default function Dashboard() {
     if (!user) return;
 
     fetchEnrollments();
+    fetchProfile();
 
-    // Listen for custom events from the Courses page
-    const refresh = () => fetchEnrollments();
-    window.addEventListener("progress-updated", refresh);
-
-    return () => {
-      window.removeEventListener("progress-updated", refresh);
+    const refresh = () => {
+      fetchEnrollments();
+      fetchProfile();
     };
-  }, [user, fetchEnrollments]);
+    
+    window.addEventListener("progress-updated", refresh);
+    return () => window.removeEventListener("progress-updated", refresh);
+  }, [user, fetchEnrollments, fetchProfile]);
 
   // Route Guard
   useEffect(() => {
@@ -113,11 +130,11 @@ export default function Dashboard() {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await supabase.signOut();
     navigate("/");
   };
 
-  const name = user?.user_metadata?.name || user?.email?.split("@")[0] || "Learner";
+  const name = profileData?.name || user?.user_metadata?.name || user?.email?.split("@")[0] || "Learner";
 
   // Loading State
   if (loading) {
@@ -182,8 +199,10 @@ export default function Dashboard() {
             <div className="mt-auto pt-6 border-t border-slate-100 dark:border-white/5">
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
-                    {name.charAt(0).toUpperCase()}
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+                    {profileData?.photo_url ? (
+                        <img src={profileData.photo_url} className="w-full h-full object-cover" alt="avatar" />
+                    ) : name.charAt(0).toUpperCase()}
                   </div>
                   <div className="overflow-hidden">
                     <p className="font-bold text-sm truncate">{name}</p>
@@ -205,28 +224,28 @@ export default function Dashboard() {
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 p-6 md:p-12 z-20 overflow-y-auto custom-scrollbar">
         {/* ACHIEVEMENT NOTIFICATION */}
-<AnimatePresence>
-  {/* FIX: We use 'c' as the iterator variable for the .some() check */}
-  {enrolledCourses.some(c => Number(c.progress) >= 100) && (
-    <motion.div 
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="mb-6 p-4 bg-gradient-to-r from-amber-500 to-orange-400 rounded-2xl text-white flex items-center justify-between shadow-lg shadow-orange-500/20 sticky top-4 z-[60]"
-    >
-      <div className="flex items-center gap-3">
-        <div className="bg-white/20 p-2 rounded-lg">
-          <Award size={24} className="animate-pulse" />
-        </div>
-        <div>
-          <p className="font-black text-sm uppercase tracking-wider">Achievement Unlocked!</p>
-          <p className="text-xs opacity-90">You have earned a new certificate. Check your courses below.</p>
-        </div>
-      </div>
-      <Sparkles size={20} className="mr-2" />
-    </motion.div>
-  )}
-</AnimatePresence>
+        <AnimatePresence>
+          {enrolledCourses.some(c => Number(c.progress) >= 100) && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mb-6 p-4 bg-gradient-to-r from-amber-500 to-orange-400 rounded-2xl text-white flex items-center justify-between shadow-lg shadow-orange-500/20 sticky top-4 z-[60]"
+            >
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-lg">
+                  <Award size={24} className="animate-pulse" />
+                </div>
+                <div>
+                  <p className="font-black text-sm uppercase tracking-wider">Achievement Unlocked!</p>
+                  <p className="text-xs opacity-90">You have earned a new certificate. Check your courses below.</p>
+                </div>
+              </div>
+              <Sparkles size={20} className="mr-2" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Top Action Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
@@ -238,7 +257,7 @@ export default function Dashboard() {
               Welcome back, <span className="text-purple-600 dark:text-purple-400">{name}</span> 👋
             </motion.h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
-              You've completed <span className="text-slate-900 dark:text-white font-bold">85%</span> of your weekly goals. Keep going!
+              You've completed <span className="text-slate-900 dark:text-white font-bold">85%</span> of your weekly goals.
             </p>
           </div>
           
@@ -262,7 +281,6 @@ export default function Dashboard() {
 
         {/* METRICS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-
           <StatCard 
             title="Courses Active" 
             value={enrolledCourses.length} 
@@ -335,74 +353,55 @@ export default function Dashboard() {
                         </button>
                       </div>
                       <div className="space-y-2">
-  <div className="flex justify-between text-xs font-bold">
-    <span className="text-slate-500 italic">Course Completion</span>
-    <span className="text-purple-600">{course.progress}%</span>
-  </div>
-  
-  <div className="h-2 w-full bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
-    <motion.div 
-      initial={{ width: 0 }}
-      animate={{ width: `${course.progress}%` }}
-      transition={{ duration: 1, ease: "easeOut" }}
-      className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-    />
-  </div>
+                        <div className="flex justify-between text-xs font-bold">
+                          <span className="text-slate-500 italic">Course Completion</span>
+                          <span className="text-purple-600">{course.progress}%</span>
+                        </div>
+                        
+                        <div className="h-2 w-full bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${course.progress}%` }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                          />
+                        </div>
 
-  {/* NEW REPLACEMENT LOGIC */}
-{/* UPDATED CERTIFICATE BUTTON */}
-{Number(course.progress) >= 100 ? (
-  <motion.button 
-    initial={{ scale: 0.9, opacity: 0 }}
-    animate={{ scale: 1, opacity: 1 }}
-    onClick={() => {
-      // 1. Get the User's Name
-      const userName = user?.user_metadata?.name || name || "Learner";
-      
-      // 2. Logic to determine the Partner Company based on course title
-      let partner = "Industry Expert"; 
-      const title = course.title.toLowerCase();
-      
-      if (title.includes("google")) partner = "Google";
-      else if (title.includes("ibm")) partner = "IBM";
-      else if (title.includes("meta") || title.includes("facebook")) partner = "Meta";
-      else if (title.includes("microsoft")) partner = "Microsoft";
-      else if (title.includes("amazon") || title.includes("aws")) partner = "AWS";
-      else partner = "SkillHer Partner"; // Default partner
-
-      // 3. Trigger the enhanced generator
-      generateCertificate(userName, course.title, partner);
-    }}
-    className="mt-4 w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-xl font-black shadow-lg hover:shadow-orange-500/40 transition-all transform hover:-translate-y-1"
-  >
-    <Award size={18} className="animate-bounce" /> 
-    DOWNLOAD PREMIUM CERTIFICATE
-  </motion.button>
-) : (
-  <button 
-    onClick={() => window.open(course.link || "#", "_blank")}
-    className="mt-4 w-full py-3 bg-slate-100 dark:bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-purple-600 hover:text-white transition-all duration-300"
-  >
-    Continue Learning
-  </button>
-)}
-</div>
+                        {Number(course.progress) >= 100 ? (
+                          <motion.button 
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            onClick={() => {
+                              const userName = profileData?.name || name || "Learner";
+                              let partner = "SkillHer Partner"; 
+                              const title = course.title.toLowerCase();
+                              if (title.includes("google")) partner = "Google";
+                              else if (title.includes("ibm")) partner = "IBM";
+                              else if (title.includes("meta")) partner = "Meta";
+                              generateCertificate(userName, course.title, partner);
+                            }}
+                            className="mt-4 w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-xl font-black shadow-lg hover:shadow-orange-500/40 transition-all transform hover:-translate-y-1"
+                          >
+                            <Award size={18} className="animate-bounce" /> 
+                            DOWNLOAD PREMIUM CERTIFICATE
+                          </motion.button>
+                        ) : (
+                          <button 
+                            onClick={() => window.open(course.link || "#", "_blank")}
+                            className="mt-4 w-full py-3 bg-slate-100 dark:bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-purple-600 hover:text-white transition-all duration-300"
+                          >
+                            Continue Learning
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="py-16 text-center bg-slate-50 dark:bg-white/5 rounded-3xl border-2 border-dashed border-slate-200 dark:border-white/10">
-                  <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
-                    <BookOpen size={28} className="text-slate-300" />
-                  </div>
-                  <h3 className="font-bold text-slate-400">No active courses found</h3>
-                  <p className="text-sm text-slate-500 mt-2 max-w-xs mx-auto">Build your skills by enrolling in our curated industry-level courses.</p>
-                  <button 
-                    onClick={() => navigate("/See-Courses")}
-                    className="mt-6 px-6 py-2 bg-purple-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-purple-500/20"
-                  >
-                    Explore Catalog
-                  </button>
+                  <BookOpen size={28} className="text-slate-300 mx-auto mb-4" />
+                  <h3 className="font-bold text-slate-400">No active courses</h3>
+                  <button onClick={() => navigate("/See-Courses")} className="mt-6 px-6 py-2 bg-purple-600 text-white rounded-xl font-bold text-sm">Explore Catalog</button>
                 </div>
               )}
             </GlassCard>
@@ -412,9 +411,6 @@ export default function Dashboard() {
                 <div className="space-y-4">
                   <ServiceRow title="Resume Makeover" status="In Review" price="₹1,200" />
                   <ServiceRow title="Career Mentorship" status="Active" price="₹4,500" />
-                  <button className="w-full py-3 rounded-xl border border-dashed border-slate-300 dark:border-white/20 text-slate-400 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-                    + Register New Service
-                  </button>
                 </div>
               </GlassCard>
 
@@ -427,43 +423,114 @@ export default function Dashboard() {
                       <p className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">Personal Best!</p>
                     </div>
                   </div>
-                  <div className="text-xs font-bold text-slate-500">Keep it up!</div>
                 </div>
               </GlassCard>
             </div>
           </div>
 
-          {/* Right Column: Applications & Activity */}
+          {/* Right Column: Applications & Profile Preview */}
           <div className="space-y-10">
             
+            {/* DYNAMIC PROFILE PREVIEW CARD */}
+            <section className="relative group p-1 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-[2.5rem] shadow-2xl">
+              <div className="bg-white dark:bg-[#0F121A] rounded-[2.4rem] p-8">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="relative">
+                    <div className="w-20 h-20 rounded-2xl bg-slate-100 overflow-hidden border-2 border-purple-100">
+                      {profileData?.photo_url ? (
+                        <img src={profileData.photo_url} className="w-full h-full object-cover" alt="profile" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-2xl font-black text-purple-300">
+                          {name.charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-lg border-4 border-white dark:border-[#0F121A]">
+                      <CheckCircle2 size={12} />
+                    </div>
+                  </div>
+                  <button onClick={() => navigate("/profile")} className="p-2 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-400 hover:text-purple-500 transition-colors">
+                    <Edit3 size={18} />
+                  </button>
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black text-slate-800 dark:text-white truncate">{name}</h3>
+                  <p className="text-sm font-bold text-purple-600 dark:text-purple-400 truncate">
+                    {profileData?.headline || "Aspiring Professional"}
+                  </p>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {profileData?.skills?.slice(0, 3).map((skill, i) => (
+                    <span key={i} className="px-3 py-1 bg-slate-100 dark:bg-white/5 rounded-full text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                      {skill}
+                    </span>
+                  ))}
+                  {(profileData?.skills?.length > 3) && (
+                    <span className="px-3 py-1 bg-purple-50 text-purple-500 rounded-full text-[10px] font-black uppercase">
+                      +{profileData.skills.length - 3} More
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-100 dark:border-white/5 space-y-4">
+                  <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 text-xs font-medium">
+                    <MapPin size={14} className="text-slate-300" />
+                    {profileData?.location || "Remote / Global"}
+                  </div>
+                  <div className="flex items-center gap-4">
+                    {profileData?.github && (
+                      <a href={profileData.github} target="_blank" className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <Github size={18} />
+                      </a>
+                    )}
+                    {profileData?.linkedin && (
+                      <a href={profileData.linkedin} target="_blank" className="text-slate-400 hover:text-blue-600 transition-colors">
+                        <Linkedin size={18} />
+                      </a>
+                    )}
+                    {profileData?.portfolio && (
+                      <a href={profileData.portfolio} target="_blank" className="text-slate-400 hover:text-purple-500 transition-colors">
+                        <Globe size={18} />
+                      </a>
+                    )}
+                    <a href={`mailto:${user.email}`} className="text-slate-400 hover:text-pink-500 transition-colors">
+                      <Mail size={18} />
+                    </a>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => navigate("/profile")}
+                  className="w-full mt-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black text-xs tracking-widest hover:bg-purple-600 dark:hover:bg-purple-500 dark:hover:text-white transition-all shadow-xl"
+                >
+                  FULL PROFILE HUB
+                </button>
+              </div>
+            </section>
+
             <GlassCard title="Job Applications" icon={<Briefcase className="text-pink-500" />}>
               <div className="divide-y divide-slate-100 dark:divide-white/5">
                 <JobRow company="Apple Inc." role="UI Intern" status="Shortlisted" date="2d ago" color="bg-emerald-500" />
                 <JobRow company="Google" role="Frontend Developer" status="Under Review" date="5d ago" color="bg-blue-500" />
                 <JobRow company="Stripe" role="Product Designer" status="Applied" date="1w ago" color="bg-slate-400" />
               </div>
-              <button 
-                onClick={() => navigate("/jobs")}
-                className="w-full mt-6 py-4 rounded-2xl bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-slate-300 font-bold text-sm flex items-center justify-center gap-2 hover:bg-purple-50 dark:hover:bg-purple-500/10 transition-all border border-slate-200 dark:border-white/10"
-              >
-                Find New Opportunities <ChevronRight size={16} />
+              <button onClick={() => navigate("/jobs")} className="w-full mt-6 py-4 rounded-2xl bg-slate-50 dark:bg-white/5 text-slate-700 font-bold text-sm flex items-center justify-center gap-2">
+                Find Opportunities <ChevronRight size={16} />
               </button>
             </GlassCard>
 
-            <GlassCard title="Community Highlights" icon={<MessageSquare className="text-indigo-500" />}>
+            <GlassCard title="Community" icon={<MessageSquare className="text-indigo-500" />}>
               <div className="space-y-5">
                 <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex-shrink-0 overflow-hidden">
+                  <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt="user" />
                   </div>
                   <div className="text-sm">
-                    <p className="font-bold text-slate-800 dark:text-white">Sarah Jenkins <span className="font-normal text-slate-400">posted in</span> Design</p>
-                    <p className="text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 italic">"Just finished the Advanced Figma course! The auto-layout module was a game changer..."</p>
+                    <p className="font-bold text-slate-800 dark:text-white">Sarah Jenkins</p>
+                    <p className="text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 italic">"Just finished the Advanced Figma course! auto-layout module was a game changer..."</p>
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <div className="flex-1 h-20 rounded-xl bg-purple-100 dark:bg-purple-900/30"></div>
-                  <div className="flex-1 h-20 rounded-xl bg-pink-100 dark:bg-pink-900/30"></div>
                 </div>
               </div>
             </GlassCard>
@@ -473,8 +540,8 @@ export default function Dashboard() {
               <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
               <div className="relative z-10">
                 <h3 className="text-xl font-black mb-2">Upgrade to Pro</h3>
-                <p className="text-purple-100 text-sm mb-6 leading-relaxed">Get unlimited access to advanced mentorship and placement assistance.</p>
-                <button className="w-full py-3 bg-white text-purple-600 rounded-xl font-black text-sm shadow-xl hover:scale-[1.02] transition-transform active:scale-95">
+                <p className="text-purple-100 text-sm mb-6 leading-relaxed">Get unlimited access to advanced mentorship.</p>
+                <button className="w-full py-3 bg-white text-purple-600 rounded-xl font-black text-sm shadow-xl">
                   UPGRADE NOW
                 </button>
               </div>
@@ -490,14 +557,13 @@ export default function Dashboard() {
             <p>Your connection is secure and encrypted.</p>
           </div>
           <div className="flex items-center gap-8">
-            <a href="#" className="hover:text-purple-500 transition-colors">Help Center</a>
-            <a href="#" className="hover:text-purple-500 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-purple-500 transition-colors flex items-center gap-1">
+            <a href="#" className="hover:text-purple-500">Help Center</a>
+            <a href="#" className="hover:text-purple-500">Privacy Policy</a>
+            <a href="#" className="hover:text-purple-500 flex items-center gap-1">
               Made with <Heart size={14} className="text-pink-500 fill-pink-500" /> by SkillHer Team
             </a>
           </div>
         </footer>
-
       </main>
 
       {/* CONFIRMATION OVERLAY MODAL */}
@@ -508,28 +574,16 @@ export default function Dashboard() {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white dark:bg-[#121826] p-10 rounded-[2.5rem] max-w-md w-full shadow-[0_30px_60px_rgba(0,0,0,0.3)] border border-red-50 dark:border-red-900/20 text-center"
+              className="bg-white dark:bg-[#121826] p-10 rounded-[2.5rem] max-w-md w-full shadow-2xl border border-red-50 text-center"
             >
-              <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <AlertCircle size={40} />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white">Confirm Unenrollment</h3>
-              <p className="text-slate-500 dark:text-slate-400 mt-4 leading-relaxed font-medium">
-                Are you sure you want to leave this course? All your earned progress and saved notes will be permanently removed.
-              </p>
+              <p className="text-slate-500 mt-4 leading-relaxed font-medium">Are you sure? Your progress will be removed.</p>
               <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                <button 
-                  onClick={() => setShowConfirm(null)}
-                  className="flex-1 py-4 rounded-2xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 font-black hover:bg-slate-200 transition-all"
-                >
-                  KEEP LEARNING
-                </button>
-                <button 
-                  onClick={() => handleUnenroll(showConfirm)}
-                  className="flex-1 py-4 rounded-2xl bg-red-500 text-white font-black shadow-lg shadow-red-500/30 hover:bg-red-600 transition-all"
-                >
-                  YES, REMOVE
-                </button>
+                <button onClick={() => setShowConfirm(null)} className="flex-1 py-4 rounded-2xl bg-slate-100 text-slate-600 font-black">KEEP LEARNING</button>
+                <button onClick={() => handleUnenroll(showConfirm)} className="flex-1 py-4 rounded-2xl bg-red-500 text-white font-black">YES, REMOVE</button>
               </div>
             </motion.div>
           </div>
@@ -541,80 +595,43 @@ export default function Dashboard() {
 
 /* ---------- HELPER COMPONENTS ---------- */
 
-/**
- * NavItem Component
- * Handles the sidebar link styling and state
- */
 function NavItem({ icon, label, active, onClick, badge }) {
   return (
     <div 
       onClick={onClick}
-      className={`
-        flex items-center justify-between p-4 rounded-2xl cursor-pointer group
-        transition-all duration-300 transform active:scale-95
-        ${active
-          ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/20"
-          : "text-slate-500 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400"}
-      `}
+      className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer group transition-all duration-300 ${active ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white" : "text-slate-500 hover:bg-purple-50 hover:text-purple-600"}`}
     >
       <div className="flex items-center gap-4">
-        <span className={`${active ? "text-white" : "group-hover:scale-110 transition-transform text-slate-400 group-hover:text-purple-500"}`}>
-          {icon}
-        </span>
+        <span>{icon}</span>
         <span className="font-bold text-sm tracking-tight">{label}</span>
       </div>
-      {badge > 0 && (
-        <span className="bg-pink-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
-          {badge}
-        </span>
-      )}
+      {badge > 0 && <span className="bg-pink-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">{badge}</span>}
       {active && <motion.div layoutId="activeInd" className="w-1.5 h-1.5 bg-white rounded-full shadow-glow" />}
     </div>
   );
 }
 
-/**
- * StatCard Component
- * Displays key metrics at the top of the dashboard
- */
 function StatCard({ title, value, icon, color, trend }) {
   return (
-    <motion.div 
-      whileHover={{ y: -5 }}
-      className="p-6 rounded-[2rem] bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-xl transition-all"
-    >
+    <motion.div whileHover={{ y: -5 }} className="p-6 rounded-[2rem] bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm transition-all">
       <div className="flex items-start justify-between mb-4">
-        <div className={`p-3 rounded-2xl ${color} text-white shadow-lg`}>
-          {icon}
-        </div>
-        <div className="text-[10px] font-black text-slate-300 dark:text-slate-600 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded-md">
-          LIVE
-        </div>
+        <div className={`p-3 rounded-2xl ${color} text-white shadow-lg`}>{icon}</div>
+        <div className="text-[10px] font-black text-slate-300 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded-md">LIVE</div>
       </div>
       <div>
         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{title}</p>
-        <h3 className="text-3xl font-black text-slate-900 dark:text-white mt-1">
-          {value}
-        </h3>
-        <p className="text-[11px] font-bold text-emerald-500 mt-2 flex items-center gap-1">
-          <TrendingUp size={12} /> {trend}
-        </p>
+        <h3 className="text-3xl font-black text-slate-900 dark:text-white mt-1">{value}</h3>
+        <p className="text-[11px] font-bold text-emerald-500 mt-2 flex items-center gap-1"><TrendingUp size={12} /> {trend}</p>
       </div>
     </motion.div>
   );
 }
 
-/**
- * GlassCard Component
- * Reusable container with glassmorphism effects
- */
 function GlassCard({ title, icon, action, children }) {
   return (
     <section className="bg-white/70 dark:bg-[#0F121A]/60 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white dark:border-white/5 shadow-sm">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="flex items-center gap-3 text-xl font-black text-slate-800 dark:text-white">
-          <span className="p-2 bg-slate-50 dark:bg-white/5 rounded-xl">{icon}</span> {title}
-        </h2>
+        <h2 className="flex items-center gap-3 text-xl font-black text-slate-800 dark:text-white"><span className="p-2 bg-slate-50 dark:bg-white/5 rounded-xl">{icon}</span> {title}</h2>
         {action}
       </div>
       {children}
@@ -622,17 +639,11 @@ function GlassCard({ title, icon, action, children }) {
   );
 }
 
-/**
- * JobRow Component
- * Simple row display for job applications
- */
 function JobRow({ company, role, status, date, color }) {
   return (
     <div className="flex items-center justify-between py-5 group cursor-default">
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-400">
-          {company.charAt(0)}
-        </div>
+        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-400">{company.charAt(0)}</div>
         <div>
           <h4 className="font-bold text-slate-800 dark:text-white group-hover:text-purple-500 transition-colors">{company}</h4>
           <p className="text-xs text-slate-400 font-medium">{role} • {date}</p>
@@ -646,12 +657,9 @@ function JobRow({ company, role, status, date, color }) {
   );
 }
 
-/**
- * ServiceRow Component
- */
 function ServiceRow({ title, status, price }) {
   return (
-    <div className="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5">
+    <div className="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-slate-100">
       <div className="flex items-center gap-3">
         <div className="w-2 h-8 bg-blue-500 rounded-full" />
         <div>
