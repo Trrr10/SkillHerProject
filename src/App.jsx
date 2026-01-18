@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
-
+import Community from "./pages/Community";
 // Components
 import Navbar from "./components/Navbar1";
 import LoginModal from "./components/LoginModal";
@@ -15,7 +15,7 @@ import Dashboard from "./pages/Dashboard";
 
 
 import Funding from "./pages/Funding";
-
+import CertificatesPage from "./pages/CertificatesPage";
 
 import Footer from "./components/Footer";
 import ExploreProducts from "./pages/ExploreProducts";
@@ -31,6 +31,8 @@ import StartSelling from "./pages/StartSelling";
 
 
 
+import AffirmationPopup from "./components/AffirmationPopup";
+
 function App() {
   const { user, login, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
@@ -38,13 +40,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E5DEFF] via-[#D6C8FF] to-[#C7B5FF]">
+      
       <Navbar
         user={user}
         onLogin={() => setShowLogin(true)}
         onSignup={() => setShowSignup(true)}
         onLogout={logout}
       />
-
+<AffirmationPopup />
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}
@@ -114,7 +117,12 @@ function App() {
 
      <Route path="/explore" element={<ExploreProducts />} />
 
+        <Route path="/certificates" element={<CertificatesPage />} />
+        <Route path="/jobs" element={<JobsPage />} />
+
+<Route path="/community" element={<Community />} />
         
+
         <Route path="/jobs" element={<JobsPage />} />
 
 
@@ -125,6 +133,7 @@ function App() {
   <Route path="/cart" element={<AddToCart />} />
 
       </Routes>
+
 
       <Footer />
     </div>
