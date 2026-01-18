@@ -1,3 +1,4 @@
+import { CartProvider } from "./pages/AddToCart";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -13,7 +14,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
          <ThemeProvider>
      <AuthProvider>
        <LanguageProvider>
-      <App />
+       <CartProvider userId="skillher_user_1">
+    <App />
+  </CartProvider>
       </LanguageProvider>
       </AuthProvider>
        </ThemeProvider>

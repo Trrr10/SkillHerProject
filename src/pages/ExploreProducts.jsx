@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { useCart } from "./AddToCart";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../supabaseClient";
@@ -6,13 +8,15 @@ import { Search, ShoppingCart, Filter, Tag, CheckCircle, ArrowRight, Star } from
 const CATEGORIES = ["All", "Crafts", "Beauty", "Education", "Digital Services", "Home Made Food"];
 
 export default function ExploreProducts() {
+  const navigate = useNavigate();
+  const { cart, addToCart } = useCart();
   const [services, setServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  const [cartCount, setCartCount] = useState(0);
+  const cartCount = cart.length;
   const [showAddedToast, setShowAddedToast] = useState(false);
 
   useEffect(() => { fetchServices(); }, []);
@@ -39,11 +43,7 @@ export default function ExploreProducts() {
     setLoading(false);
   }
 
-  const addToCart = () => {
-    setCartCount(prev => prev + 1);
-    setShowAddedToast(true);
-    setTimeout(() => setShowAddedToast(false), 2000);
-  };
+ 
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] px-4 md:px-10 py-12 transition-colors duration-500">
@@ -85,7 +85,11 @@ export default function ExploreProducts() {
               />
             </div>
 
-            <button className="relative p-4 bg-slate-900 dark:bg-white rounded-2xl group transition-all active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none">
+            <button
+  onClick={() => navigate("/cart")}
+  className="relative p-4 bg-slate-900 dark:bg-white rounded-2xl group transition-all active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none"
+>
+
               <ShoppingCart className="text-white dark:text-slate-900" size={24} />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[11px] font-black px-2 py-0.5 rounded-full ring-4 ring-[#f8fafc] dark:ring-[#020617] animate-bounce">
@@ -183,11 +187,21 @@ export default function ExploreProducts() {
                             <p className="text-2xl font-black text-slate-900 dark:text-white">₹{service.price}</p>
                           </div>
                           <button
-                            onClick={addToCart}
-                            className="bg-purple-600 hover:bg-purple-700 text-white w-12 h-12 rounded-2xl flex items-center justify-center transition-all active:scale-90 shadow-lg shadow-purple-200 dark:shadow-none"
-                          >
-                            <ShoppingCart size={20} />
-                          </button>
+  onClick={() => {
+    addToCart({
+      id: service.id,
+      name: service.title,
+      price: service.price,
+      image: service.image_url,
+    });
+    setShowAddedToast(true);
+    setTimeout(() => setShowAddedToast(false), 2000);
+  }}
+  className="bg-purple-600 hover:bg-purple-700 text-white w-12 h-12 rounded-2xl flex items-center justify-center transition-all active:scale-90 shadow-lg shadow-purple-200 dark:shadow-none"
+>
+  <ShoppingCart size={20} />
+</button>
+
                         </div>
                       </div>
                     </motion.div>

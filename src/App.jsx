@@ -23,11 +23,11 @@ import ExploreProducts from "./pages/ExploreProducts";
 import CreateProfile from "./pages/CreateProfile";
 import CoursesPage from "./pages/CoursesPage";
 import JobsPage from "./pages/JobsPage";
+import AddToCart from "./pages/AddToCart";
+
 
 import StartSelling from "./pages/StartSelling";
-import CreateProfile from "./pages/CreateProfile";
-import CoursesPage from "./pages/CoursesPage";
-import JobsPage from "./pages/JobsPage";
+
 
 
 
@@ -120,6 +120,10 @@ function App() {
 
         <Route path="/explore" element={<ExploreProducts />} />
         <Route path="/jobs" element={<JobsPage />} />
+       
+  <Route path="/explore" element={<ExploreProducts />} />
+  <Route path="/cart" element={<AddToCart />} />
+
       </Routes>
 
       <Footer />
